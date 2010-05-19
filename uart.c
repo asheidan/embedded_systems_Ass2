@@ -1,23 +1,11 @@
-
-//CPU freq 1 MHz
-
-#include <avr/io.h> 
-
+#include <avr/io.h>
 #include "uart.h"
-#include "bits.h"
-
-//0x55FF
-#define	UART_SYNC_DATA	"U\xFF"
 
 /* initialize UART */
-void InitUART( unsigned int baud ) {
-	// DDRD = 0xFF; // Set Datadirection to output
-	// InitUART(51);			// 1200 Baud, 1 Mhz
-	
-	// DDRD = 0xFF;			// output
- 	
-	UBRR0H = (unsigned char)(baud>>8);
-	UBRR0L = (unsigned char)baud;				//set the baud rate 
+void uart_init (unsigned int baud)
+{
+	UBRR0H = (unsigned char) (baud>>8);
+	UBRR0L = (unsigned char) baud;				//set the baud rate 
 	UCSR0B = _BV(RXEN0) | _BV(TXEN0);	//enable UART receiver and transmitter 
 	
 	/* Set frame format: 8data, 2stop bit */
@@ -29,22 +17,21 @@ void InitUART( unsigned int baud ) {
 }
 
 /* Read and write functions */
-unsigned char ReceiveByte( void ) {
-	loop_until_bit_is_set(UCSR0A,RXC0);		// wait for incomming data
-	unsigned char t = UDR0;
-	// TransmitByte(t);
-		return t; //UDR;							// return the data 
+unsigned char uart_receive_byte (void)
+{
+	loop_until_bit_is_set(UCSR0A, RXC0);		// wait for incomming data 
+	return UDR0;							// return the data 
 }
 
-void TransmitByte( unsigned char data ) {
-	loop_until_bit_is_set(UCSR0A,UDRE0);	// wait for empty transmit buffer 
+void uart_transmit_byte (unsigned char data)
+{
+	loop_until_bit_is_set(UCSR0A, UDRE0);	// wait for empty transmit buffer 
 	UDR0 = data; 						// start transmittion 
 }
 
-void TransmitString( char* data ) {
-	char *p;
-	for(p = data; *p != 0; p++) {
-		TransmitByte(*p);
-	}
+void uart_transmit_string (const uchar_t* str)
+{
+	const uchar_t* i;
+	for (i = str; *i; i++)
+		uart_transmit_byte(*i);
 }
-

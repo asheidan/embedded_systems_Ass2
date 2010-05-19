@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--This file was written by TinyCAD version 2.60.01
+If you wish to view this file go to http://tinycad.sourceforge.net to
+download a copy.-->
+<TinyCADSheets><TinyCAD><NAME>Sheet 1</NAME>
+<DETAILS><Size width='1485' height='1050'/>
+<GUIDES horiz='7' vert='5'/>
+<TITLE></TITLE>
+<AUTHOR></AUTHOR>
+<REVISION>1.0</REVISION>
+<DOCNUMBER></DOCNUMBER>
+<ORGANISATION></ORGANISATION>
+<SHEETS>1 of 1</SHEETS>
+<SHOWS>1</SHOWS>
+<DATE></DATE>
+<GRID spacing='100' snap='1'/>
+</DETAILS>
+<FONT id='0'><HEIGHT>-13</HEIGHT>
+<WIDTH>6</WIDTH>
+<WEIGHT>400</WEIGHT>
+<ITALIC>0</ITALIC>
+<UNDERLINE>0</UNDERLINE>
+<STRIKEOUT>0</STRIKEOUT>
+<CHARSET>0</CHARSET>
+<FACENAME>Arial</FACENAME>
+</FONT>
+<STYLE id='2'><STYLE>0</STYLE>
+<COLOR>000000</COLOR>
+<THICKNESS>1</THICKNESS>
+</STYLE>
+<FILL id='0'><INDEX>-1</INDEX>
+<COLOR>000000</COLOR>
+</FILL>
+<OPTIONS><GRID>0</GRID>
+<UNITS>0</UNITS>
+<COLOR_WIRE>FF0000</COLOR_WIRE>
+<COLOR_BUS>0000FF</COLOR_BUS>
+<COLOR_JUNCTION>000000</COLOR_JUNCTION>
+<COLOR_NOCONNECT>000000</COLOR_NOCONNECT>
+<COLOR_LABEL>208000</COLOR_LABEL>
+<COLOR_POWER>000000</COLOR_POWER>
+<COLOR_PIN>4040C0</COLOR_PIN>
+<COLOR_HIDDEN_PIN>208020</COLOR_HIDDEN_PIN>
+<COLOR_BACKGROUND>FFFFFF</COLOR_BACKGROUND>
+</OPTIONS>
+<ELLIPSE a='120,42' b='140,60' style='2' fill='0'/>
+<ELLIPSE a='70,18' b='50,36' style='2' fill='0'/>
+<TEXT pos='66,46' direction='3' font='0' color='000000'></TEXT>
+<TEXT pos='72,50' direction='3' font='0' color='000000'></TEXT>
+<ELLIPSE a='152,68' b='174,86' style='2' fill='0'/>
+<TEXT pos='154,78' direction='3' font='0' color='000000'>Timer interrupt</TEXT>
+<TEXT pos='156,104' direction='3' font='0' color='000000'>Read temperature</TEXT>
+<TEXT pos='152,124' direction='3' font='0' color='000000'>Store temperature on SD card</TEXT>
+<ELLIPSE a='182,92' b='152,110' style='2' fill='0'/>
+<ELLIPSE a='192,114' b='148,132' style='2' fill='0'/>
+<LABEL pos='124,52' direction='3' font='0' color='208000' style='0'>Main loop</LABEL>
+<ELLIPSE a='110,74' b='82,92' style='2' fill='0'/>
+<TEXT pos='86,84' direction='3' font='0' color='000000'>External interrupt</TEXT>
+<RECTANGLE a='82,102' b='108,114' style='2' fill='0'/>
+<TEXT pos='86,108' direction='3' font='0' color='000000'>GET request?</TEXT>
+<WIRE a='82,108' b='66,108'/>
+<WIRE a='66,108' b='66,48'/>
+<WIRE a='66,48' b='120,48'/>
+<WIRE a='96,92' b='96,102'/>
+<POLYGON pos='96,54' style='2' fill='0'><POINT pos='0,20' arc='0'/>
+<POINT pos='24,0' arc='2'/>
+</POLYGON>
+<POLYGON pos='140,50' style='2' fill='0'><POINT pos='18,20' arc='0'/>
+<POINT pos='0,0' arc='2'/>
+</POLYGON>
+<WIRE a='164,86' b='164,92'/>
+<POLYGON pos='130,60' style='2' fill='0'><POINT pos='0,0' arc='0'/>
+<POINT pos='24,58' arc='2'/>
+</POLYGON>
+<TEXT pos='74,106' direction='3' font='0' color='000000'>No</TEXT>
+<WIRE a='94,114' b='94,128'/>
+<TEXT pos='98,126' direction='3' font='0' color='000000'>Yes</TEXT>
+<TEXT pos='74,140' direction='3' font='0' color='000000'>Read and send data on SD card</TEXT>
+<ELLIPSE a='62,128' b='124,150' style='2' fill='0'/>
+<POLYGON pos='110,60' style='2' fill='0'><POINT pos='0,70' arc='0'/>
+<POINT pos='18,0' arc='2'/>
+</POLYGON>
+</TinyCAD>
+</TinyCADSheets>

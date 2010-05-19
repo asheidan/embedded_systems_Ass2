@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--This file was written by TinyCAD version 2.60.01
+If you wish to view this file go to http://tinycad.sourceforge.net to
+download a copy.-->
+<TinyCADSheets><TinyCAD><NAME>Sheet 1</NAME>
+<DETAILS><Size width='1485' height='1050'/>
+<GUIDES horiz='7' vert='5'/>
+<TITLE></TITLE>
+<AUTHOR></AUTHOR>
+<REVISION>1.0</REVISION>
+<DOCNUMBER></DOCNUMBER>
+<ORGANISATION></ORGANISATION>
+<SHEETS>1 of 1</SHEETS>
+<SHOWS>1</SHOWS>
+<DATE></DATE>
+<GRID spacing='100' snap='1'/>
+</DETAILS>
+<FONT id='0'><HEIGHT>-13</HEIGHT>
+<WIDTH>6</WIDTH>
+<WEIGHT>400</WEIGHT>
+<ITALIC>0</ITALIC>
+<UNDERLINE>0</UNDERLINE>
+<STRIKEOUT>0</STRIKEOUT>
+<CHARSET>0</CHARSET>
+<FACENAME>Arial</FACENAME>
+</FONT>
+<STYLE id='0'><STYLE>0</STYLE>
+<COLOR>000000</COLOR>
+<THICKNESS>1</THICKNESS>
+</STYLE>
+<STYLE id='2'><STYLE>0</STYLE>
+<COLOR>000000</COLOR>
+<THICKNESS>1</THICKNESS>
+</STYLE>
+<FILL id='0'><INDEX>-1</INDEX>
+<COLOR>000000</COLOR>
+</FILL>
+<OPTIONS><GRID>0</GRID>
+<UNITS>0</UNITS>
+<COLOR_WIRE>FF0000</COLOR_WIRE>
+<COLOR_BUS>0000FF</COLOR_BUS>
+<COLOR_JUNCTION>000000</COLOR_JUNCTION>
+<COLOR_NOCONNECT>000000</COLOR_NOCONNECT>
+<COLOR_LABEL>208000</COLOR_LABEL>
+<COLOR_POWER>000000</COLOR_POWER>
+<COLOR_PIN>4040C0</COLOR_PIN>
+<COLOR_HIDDEN_PIN>208020</COLOR_HIDDEN_PIN>
+<COLOR_BACKGROUND>FFFFFF</COLOR_BACKGROUND>
+</OPTIONS>
+<RECTANGLE a='88,78' b='110,120' style='2' fill='0'/>
+<TEXT pos='96,108' direction='0' font='0' color='000000'>ATMega644PA</TEXT>
+<RECTANGLE a='146,56' b='166,70' style='2' fill='0'/>
+<TEXT pos='154,64' direction='3' font='0' color='000000'>LM74</TEXT>
+<RECTANGLE a='162,126' b='186,142' style='2' fill='0'/>
+<TEXT pos='166,138' direction='3' font='0' color='000000'>SD card reader</TEXT>
+<RECTANGLE a='118,54' b='144,70' style='2' fill='0'/>
+<TEXT pos='126,62' direction='3' font='0' color='000000'>ENC28J60</TEXT>
+<WIRE a='122,70' b='122,84'/>
+<WIRE a='122,84' b='110,84'/>
+<WIRE a='126,70' b='126,88'/>
+<WIRE a='130,70' b='130,108'/>
+<WIRE a='134,70' b='134,96'/>
+<WIRE a='138,70' b='138,100'/>
+<WIRE a='142,70' b='142,104'/>
+<WIRE a='126,88' b='110,88'/>
+<WIRE a='162,70' b='162,104'/>
+<WIRE a='158,70' b='158,100'/>
+<WIRE a='138,100' b='110,100'/>
+<JUNCTION pos='138,100'/>
+<JUNCTION pos='138,100'/>
+<WIRE a='130,108' b='110,108'/>
+<WIRE a='166,112' b='166,126'/>
+<WIRE a='170,126' b='170,96'/>
+<WIRE a='174,126' b='174,100'/>
+<WIRE a='158,100' b='138,100'/>
+<JUNCTION pos='158,100'/>
+<WIRE a='174,100' b='158,100'/>
+<WIRE a='178,126' b='178,104'/>
+<JUNCTION pos='162,104'/>
+<WIRE a='178,104' b='162,104'/>
+<WIRE a='142,104' b='110,104'/>
+<JUNCTION pos='142,104'/>
+<WIRE a='162,104' b='142,104'/>
+<TEXT pos='112,84' direction='3' font='0' color='000000'></TEXT>
+<TEXT pos='110,88' direction='3' font='0' color='000000'></TEXT>
+<TEXT pos='110,92' direction='3' font='0' color='000000'></TEXT>
+<TEXT pos='110,96' direction='3' font='0' color='000000'></TEXT>
+<TEXT pos='110,100' direction='3' font='0' color='000000'></TEXT>
+<WIRE a='134,96' b='110,96'/>
+<JUNCTION pos='134,96'/>
+<WIRE a='158,96' b='134,96'/>
+<TEXT pos='134,74' direction='0' font='0' color='000000'></TEXT>
+<LABEL pos='110,84' direction='2' font='0' color='208000' style='0'>PD2/INT0</LABEL>
+<LABEL pos='110,88' direction='2' font='0' color='208000' style='0'>PD3/INT1</LABEL>
+<LABEL pos='110,108' direction='2' font='0' color='208000' style='0'>PA0</LABEL>
+<LABEL pos='110,96' direction='2' font='0' color='208000' style='0'>MOSI</LABEL>
+<LABEL pos='110,100' direction='2' font='0' color='208000' style='0'>MISO</LABEL>
+<LABEL pos='110,104' direction='2' font='0' color='208000' style='0'>SCK</LABEL>
+<LABEL pos='130,70' direction='0' font='0' color='208000' style='0'>SS</LABEL>
+<LABEL pos='150,70' direction='0' font='0' color='208000' style='0'>CS</LABEL>
+<JUNCTION pos='158,96'/>
+<WIRE a='158,96' b='158,100'/>
+<WIRE a='170,96' b='158,96'/>
+<LABEL pos='158,70' direction='0' font='0' color='208000' style='0'>SI/O</LABEL>
+<LABEL pos='162,70' direction='0' font='0' color='208000' style='0'>SC</LABEL>
+<LABEL pos='166,126' direction='1' font='0' color='208000' style='0'>CS</LABEL>
+<LABEL pos='170,126' direction='1' font='0' color='208000' style='0'>MOSI</LABEL>
+<LABEL pos='174,126' direction='1' font='0' color='208000' style='0'>MISO</LABEL>
+<LABEL pos='178,126' direction='1' font='0' color='208000' style='0'>SCK</LABEL>
+<POLYGON pos='148,68' style='2' fill='0'><POINT pos='2,0' arc='0'/>
+<POINT pos='0,2' arc='0'/>
+<POINT pos='4,2' arc='0'/>
+<POINT pos='2,0' arc='0'/>
+</POLYGON>
+<POLYGON pos='128,68' style='0' fill='0'><POINT pos='2,0' arc='0'/>
+<POINT pos='0,2' arc='0'/>
+<POINT pos='4,2' arc='0'/>
+<POINT pos='2,0' arc='0'/>
+</POLYGON>
+<POLYGON pos='164,126' style='2' fill='0'><POINT pos='0,0' arc='0'/>
+<POINT pos='2,2' arc='0'/>
+<POINT pos='4,0' arc='0'/>
+<POINT pos='0,0' arc='0'/>
+</POLYGON>
+<WIRE a='150,70' b='150,116'/>
+<WIRE a='150,116' b='110,116'/>
+<WIRE a='166,112' b='110,112'/>
+<LABEL pos='110,112' direction='2' font='0' color='208000' style='0'>PA1</LABEL>
+<LABEL pos='110,116' direction='2' font='0' color='208000' style='0'>PA2</LABEL>
+<LABEL pos='112,84' direction='3' font='0' color='208000' style='0'>16</LABEL>
+<LABEL pos='112,88' direction='3' font='0' color='208000' style='0'>17</LABEL>
+<LABEL pos='112,108' direction='3' font='0' color='208000' style='0'>40</LABEL>
+<LABEL pos='112,112' direction='3' font='0' color='208000' style='0'>41</LABEL>
+<LABEL pos='112,116' direction='3' font='0' color='208000' style='0'>42</LABEL>
+<LABEL pos='112,96' direction='3' font='0' color='208000' style='0'>6</LABEL>
+<LABEL pos='112,100' direction='3' font='0' color='208000' style='0'>7</LABEL>
+<LABEL pos='112,104' direction='3' font='0' color='208000' style='0'>8</LABEL>
+<LABEL pos='158,72' direction='1' font='0' color='208000' style='0'>1</LABEL>
+<LABEL pos='162,72' direction='1' font='0' color='208000' style='0'>2</LABEL>
+<LABEL pos='150,72' direction='1' font='0' color='208000' style='0'>7</LABEL>
+<LABEL pos='142,72' direction='1' font='0' color='208000' style='0'>1</LABEL>
+<LABEL pos='138,72' direction='1' font='0' color='208000' style='0'>2</LABEL>
+<LABEL pos='138,70' direction='0' font='0' color='208000' style='0'>MOSI</LABEL>
+<LABEL pos='142,70' direction='0' font='0' color='208000' style='0'>SCK</LABEL>
+<LABEL pos='134,70' direction='0' font='0' color='208000' style='0'>MISO</LABEL>
+<LABEL pos='134,72' direction='1' font='0' color='208000' style='0'>3</LABEL>
+<LABEL pos='130,72' direction='1' font='0' color='208000' style='0'>7</LABEL>
+</TinyCAD>
+</TinyCADSheets>

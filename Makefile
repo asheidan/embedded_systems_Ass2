@@ -1,37 +1,61 @@
 ### Makefile for AVR #########################################################
-TARGET     = main.elf
-TARGOBJS   = main.o uart.o
-TARGHEX    = $(TARGET:.elf=.hex)
+TARGET		= main.elf
+TARGOBJS		= main.o
+TARGHEX		= $(TARGET:.elf=.hex)
 
-DEVICE     = atmega644
-CLOCK      = 1000000
+# Procyon used parts
+# General, used by others
+# PROCOBJS		+= timer.o
+# Net
+PROCOBJS		+= net/arp.o net/dhcp.o net/icmp.o net/ip.o net/net.o net/netstack.o
+# Net driver
+# PROCOBJS	+= net/enc28j60.o
+# Real time clock
+PROCOBJS		+= rtc.o
+# MMC-functionality
+# PROCOBJS		+= mmc.o
+# SPI
+PROCOBJS		+= spi.o
+# UART, 2 because we have two!
+# PROCOBJS		+= uart2.o
+# Telnet
+PROCOBJS		+= vt100.o xmodem.o
+
+DEVICE		= atmega644
+CLOCK			= 1000000
 # -B 8.68us = 115.2kHz Needs to be atmost 1/4 of dev clockspeed
 # PROGRAMMER = -c stk500 -P /dev/tty.PL2303-00* -B 8.68
-PROGRAMMER = -c avrisp2 -P usb -B 8.68
-FUSES      = -U lfuse:w:0x62:m -U efuse:w:0xff:m -U hfuse:w:0xd9:m
+PROGRAMMER	= -c avrisp2 -P usb -B 8.68
+FUSES			= -U lfuse:w:0x62:m -U efuse:w:0xff:m -U hfuse:w:0xd9:m
 
-SOURCES = $(shell ls *.c)
+SOURCES	 	= $(shell ls *.c)
 
 ### Paths ####################################################################
-CFLAGS		:= -Wall -Os
-# -D__DEBUG__
-AVR-PATH    := /usr/local/CrossPack-AVR/bin/
+CFLAGS		= -Wall -Os -I$(AVRLIB)
+LFLAGS		= -Llib -lprocyon
+
+AVRLIB		= avrlib
+
+AVR-PATH		:= /usr/local/CrossPack-AVR/bin/
 PATH			:= $(PATH):$(AVR-PATH)
-AVR-CC      := sh avr-gcc
-AVR-OBJCOPY := avr-objcopy
-AVR-OBJDUMP := avr-objdump
-AVR-SIZE    := avr-size
+AVR-CC		:= sh avr-gcc
+AVR-OBJCOPY	:= avr-objcopy
+AVR-OBJDUMP	:= avr-objdump
+AVR-SIZE		:= avr-size
+AVR-AR		:= avr-ar
 
 ### Commands #################################################################
 
 AVRDUDE = avrdude $(PROGRAMMER) -p $(DEVICE)
 COMPILE = $(AVR-CC) $(CFLAGS) -mmcu=$(DEVICE)
 
-default: $(TARGET)
+# default: $(TARGET)
+default: lib/libprocyon.a
 
 # Including generated dependencies
 ifneq "$(MAKECMDGOALS)" "clean"
 -include $(subst .o,.d,$(TARGOBJS))
+-include $(patsubst %,lib/%,$(subst .o,.d,$(PROCOBJS)))
 endif
 
 ### Functions ################################################################
@@ -39,13 +63,28 @@ endif
 # $(call make-depend,source-file,object-file,depend-file)
 define make-depend
 	@# Include -MM to exclude "system headers"
-	$(AVR-CC) -mmcu=$(DEVICE) -MM -MP -MF $3 -MT $2 $1
+	$(AVR-CC) -I$(AVRLIB) -mmcu=$(DEVICE) -MM -MP -MF $3 -MT $2 $1
 endef
 
 ### Project Rules ############################################################
 
 $(TARGET): $(TARGOBJS)
-	$(COMPILE) -o $@ $(TARGOBJS)
+	$(COMPILE) $(LFLAGS) -o $@ $(TARGOBJS)
+
+#### Procyon #################################################################
+
+lib/libprocyon.a: $(patsubst %,lib/%,$(PROCOBJS))
+	$(AVR-AR) cr $@ $(patsubst %,lib/%,$(PROCOBJS))
+
+lib/net:
+	mkdir -p $@
+
+lib/%.o: avrlib/%.c lib/net
+	$(call make-depend,$<,$@,$(subst .o,.d,$@))
+	$(COMPILE) -c -o $@ $<
+
+clean_procyon:
+	-rm -r lib/libprocyon.a
 
 ### Rules ####################################################################
 
@@ -68,15 +107,16 @@ readfuse:
 	$(AVR-OBJCOPY) -j .text -j .data -O ihex $< $@
 
 # Make them all depend on changes in this file
-$(TARGOBJS) $(TARGET): Makefile
+$(TARGOBJS) $(TARGET) lib/libprocyon.a: Makefile
 
 %.o: %.c
-	# $^
 	$(call make-depend,$<,$@,$(subst .o,.d,$@))
 	$(COMPILE) -c -o $@ $<
 
 clean:
-	-rm -f *.o *.hex *.elf *.d *.tmp
+	-rm -f *.o **/*.o *.hex *.elf *.d **/*.d *.tmp
+
+clean_all: clean clean_procyon
 
 .PHONY: clean clean_all default
 

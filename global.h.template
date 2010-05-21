@@ -10,13 +10,6 @@
 
 #define CYCLES_PER_US ((F_CPU+500000)/1000000) 	// cpu cycles per microsecond
 
-
-#ifndef SETBIT
-#define	SETBIT(ADDRESS,BIT) (ADDRESS |= (1<<BIT))
-#endif
-
-#ifndef CLEARBIT
-#define	CLEARBIT(ADDRESS,BIT) (ADDRESS &= ~(1<<BIT))
-#endif
+#include "bits.h"
 
 #endif

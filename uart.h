@@ -1,11 +1,11 @@
 #ifndef _UART_H
 #define _UART_H
 
-#include "types.h"
+#include "global.h"
 
 void uart_init (unsigned int baud);
-unsigned char uart_receive_byte (void);
-void uart_transmit_byte (uchar_t data);
-void uart_transmit_string (const uchar_t* str);
+u08 uart_receive_byte (void);
+void uart_transmit_byte (u08 data);
+void uart_transmit_string (const u08* str);
 
 #endif

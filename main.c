@@ -1,16 +1,10 @@
 #include <avr/io.h>
-#define F_CPU 1000000
+
+#include "global.h"
+
 #include <util/delay.h>
 #include "uart.h"
 
-void spiInit (void)
-{
-	// Set MOSI and SCK output, MISO input
-	DDRB |= (1 << PINB5) | (1 << PINB7);
-	DDRB &= ~(1 << PINB6);
-	// Enable SPI, Master, set clock rate fck/16
-	SPCR = (1 << SPE) | (1 << MSTR) | (1 << SPR0) | (1 << DORD);
-}
 
 int main (void) {
 	DDRA = 0xFF;

@@ -17,21 +17,21 @@ void uart_init (unsigned int baud)
 }
 
 /* Read and write functions */
-unsigned char uart_receive_byte (void)
+u08 uart_receive_byte (void)
 {
 	loop_until_bit_is_set(UCSR0A, RXC0);		// wait for incomming data 
 	return UDR0;							// return the data 
 }
 
-void uart_transmit_byte (unsigned char data)
+void uart_transmit_byte (u08 data)
 {
 	loop_until_bit_is_set(UCSR0A, UDRE0);	// wait for empty transmit buffer 
 	UDR0 = data; 						// start transmittion 
 }
 
-void uart_transmit_string (const uchar_t* str)
+void uart_transmit_string (const u08* str)
 {
-	const uchar_t* i;
+	const u08* i;
 	for (i = str; *i; i++)
 		uart_transmit_byte(*i);
 }

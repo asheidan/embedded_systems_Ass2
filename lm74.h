@@ -3,17 +3,9 @@
 
 #include <avr/io.h>
 
-#include "types.h"
+#include "global.h"
 
 #define LM74_CS PINA2
-
-#ifndef SETBIT
-#define	SETBIT(ADDRESS,BIT) (ADDRESS |= (1<<BIT))
-#endif
-
-#ifndef CLEARBIT
-#define	CLEARBIT(ADDRESS,BIT) (ADDRESS &= ~(1<<BIT))
-#endif
 
 int read_temperature (void);
 

@@ -28,6 +28,8 @@ CLOCK			= 1000000
 PROGRAMMER	= -c avrisp2 -P usb -B 8.68
 FUSES			= -U lfuse:w:0x62:m -U efuse:w:0xff:m -U hfuse:w:0xd9:m
 
+FORMAT		= ihex
+
 SOURCES	 	= $(shell ls *.c)
 
 ### Paths ####################################################################
@@ -104,7 +106,14 @@ readfuse:
 	$(AVRDUDE) -qq -U lfuse:r:/dev/stdout:h -U efuse:r:/dev/stdout:h -U hfuse:r:/dev/stdout:h
 
 %.hex: %.elf
-	$(AVR-OBJCOPY) -j .text -j .data -O ihex $< $@
+	$(AVR-OBJCOPY) -j .text -j .data -O $(FORMAT) $< $@
+
+%.eep: %.elf
+	$(AVR-OBJCOPY) \
+		-j .eeprom \
+		--set-section-flags=.eeprom="alloc,load" \
+		--change-section-lma .eeprom=0 \
+		-O $(FORMAT) $< $@
 
 # Make them all depend on changes in this file
 $(TARGOBJS) $(TARGET) lib/libprocyon.a: Makefile

@@ -1,0 +1,22 @@
+#ifndef _GLOBAL_H
+#define _GLOBAL_H
+
+#define F_CPU $F_CPU
+
+// global AVRLIB defines
+#include "avrlibdefs.h"
+// global AVRLIB types definitions
+#include "avrlibtypes.h"
+
+#define CYCLES_PER_US ((F_CPU+500000)/1000000) 	// cpu cycles per microsecond
+
+
+#ifndef SETBIT
+#define	SETBIT(ADDRESS,BIT) (ADDRESS |= (1<<BIT))
+#endif
+
+#ifndef CLEARBIT
+#define	CLEARBIT(ADDRESS,BIT) (ADDRESS &= ~(1<<BIT))
+#endif
+
+#endif

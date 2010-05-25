@@ -30,10 +30,18 @@ void uart_transmit_byte (u08 data)
 	UDR0 = data; 						// start transmittion 
 }
 
-void uart_transmit_string (const char* str)
+void uart_transmit_const_string (const char* str)
 {
 	uint8_t i;
 	for (i = 0; pgm_read_byte(&str[i]) != '\0'; i++) {
 		uart_transmit_byte(pgm_read_byte(&str[i]));
+	}
+}
+
+void uart_transmit_string (const char* str)
+{
+	const char *p;
+	for (p = str; *p != '\0'; p++) {
+		uart_transmit_byte(*p);
 	}
 }

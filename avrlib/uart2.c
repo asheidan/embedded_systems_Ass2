@@ -164,12 +164,12 @@ void uartSendByte(u08 nUart, u08 txData)
 	// send byte
 	if(nUart)
 	{
-		while(!(UCSR1A & (1<<UDRE)));
+		while(!(UCSR1A & (1<<UDRE1)));
 		outb(UDR1, txData);
 	}
 	else
 	{
-		while(!(UCSR0A & (1<<UDRE)));
+		while(!(UCSR0A & (1<<UDRE0)));
 		outb(UDR0, txData);
 	}
 	// set ready state to FALSE

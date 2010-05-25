@@ -3,9 +3,9 @@
 
 #define F_CPU $F_CPU
 
-// global AVRLIB defines
+/* global AVRLIB defines */
 #include "avrlibdefs.h"
-// global AVRLIB types definitions
+/* global AVRLIB types definitions */
 #include "avrlibtypes.h"
 
 #define CYCLES_PER_US ((F_CPU+500000)/1000000) 	// cpu cycles per microsecond

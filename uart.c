@@ -1,4 +1,5 @@
 #include <avr/io.h>
+#include <avr/pgmspace.h>
 #include "uart.h"
 
 /* initialize UART */
@@ -13,7 +14,7 @@ void uart_init (unsigned int baud)
 	UCSR0C = (1<<USBS0)|(1<<UCSZ00)|(1<<UCSZ01);
 	
 	/* Enagle RC_Int */
-	UCSR0B |= (1<<RXCIE0);
+	// UCSR0B |= (1<<RXCIE0);
 }
 
 /* Read and write functions */
@@ -29,9 +30,10 @@ void uart_transmit_byte (u08 data)
 	UDR0 = data; 						// start transmittion 
 }
 
-void uart_transmit_string (const u08* str)
+void uart_transmit_string (const char* str)
 {
-	const u08* i;
-	for (i = str; *i; i++)
-		uart_transmit_byte(*i);
+	uint8_t i;
+	for (i = 0; pgm_read_byte(&str[i]) != '\0'; i++) {
+		uart_transmit_byte(pgm_read_byte(&str[i]));
+	}
 }

@@ -29,7 +29,11 @@ def add_commands(env):
 	
 	def flash(env,source):
 		assert(len(source)==1)
-		env.Command('flash',source,'$AVRDUDE $DUDEFLAGS -U flash:w:$SOURCE:i')
+		env.Command('flash',source,'$AVRDUDE $DUDEFLAGS -qq -U flash:w:$SOURCE:i')
+	
+	def erase_device(env,source=None):
+		env.Command('erase',None,'$AVRDUDE $DUDEFLAGS -e')
 	
 	env.AddMethod(read_fuse, "ReadFuses")
 	env.AddMethod(flash, "Flash")
+	env.AddMethod(erase_device, "Erase")

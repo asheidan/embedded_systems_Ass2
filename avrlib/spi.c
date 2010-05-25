@@ -35,10 +35,11 @@
 //#define SPI_USEINT
 
 // global variables
-volatile u08 spiTransferComplete;
 
 // SPI interrupt service handler
 #ifdef SPI_USEINT
+volatile u08 spiTransferComplete;
+
 SIGNAL(SIG_SPI)
 {
 	spiTransferComplete = TRUE;
@@ -95,7 +96,9 @@ void spiInit()
 	
 	// clear status
 	inb(SPSR);
+	#ifdef SPI_USEINT
 	spiTransferComplete = TRUE;
+	#endif
 
 	// enable SPI interrupt
 	#ifdef SPI_USEINT

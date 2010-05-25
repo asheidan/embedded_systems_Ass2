@@ -1,8 +1,8 @@
 import os,sys
 conf		= {}
-mcu			= "atmega644"
+mcu			= "atmega644pa"
 conf['MCU']	= mcu
-conf['F_CPU'] = 1000000
+conf['F_CPU'] = 8000000
 
 crosspack	= '/usr/local/CrossPack-AVR/bin'
 
@@ -16,7 +16,7 @@ avr	 = Environment(
 				MCU=mcu,AVRPATH=crosspack)
 dude	= Environment(
 				tools=['avrdude'],toolpath=['scons'],
-				MCU=mcu,PROGRAMMER=programmer,AVRPATH=crosspack)
+				MCU="atmega644",PROGRAMMER=programmer,AVRPATH=crosspack)
 
 avr.Append(CPPPATH=['.','avrlib'])
 avr.Append(CFLAGS=['-Os','-Wall','-std=gnu99','-funsigned-char','-funsigned-bitfields','-fshort-enums','-fpack-struct'])
@@ -24,7 +24,7 @@ avr.Append(CFLAGS=['-Os','-Wall','-std=gnu99','-funsigned-char','-funsigned-bitf
 ### Procyon ##################################################################
 # net_files	   = [os.path.join('net', f) for f in Split('arp.c dhcp.c icmp.c ip.c net.c netstack.c')]
 
-general_files   = [os.path.join('avrlib',f) for f in Split('spi.c mmc.c rprintf.c')]
+general_files   = [os.path.join('avrlib',f) for f in Split('spi.c mmc.c rprintf.c uart2.c buffer.c')]
 # # general_files.append('uart2.c')
 # 
 procyon = avr.Library('procyon', general_files)
@@ -50,7 +50,7 @@ global_header = avr.GenerateFromTemplate('global.h.template')
 Depends(global_header, 'SConstruct')
 
 
-target = avr.Program(Split('main.c uart.c lm74.c'),LIBS=['procyon'],LIBPATH=['.'])
+target = avr.Program(Split('main.c lm74.c'),LIBS=['procyon'],LIBPATH=['.'])
 Depends(target,procyon)
 avr.DisplaySizes('size',target)
 

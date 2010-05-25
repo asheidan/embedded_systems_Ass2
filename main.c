@@ -11,6 +11,7 @@
 // Procyon headers
 #include "spi.h"
 #include "mmc.h"
+#include "uart2.h"
 #include "rprintf.h"
 
 // Local headers
@@ -18,8 +19,8 @@
 #include "lm74.h"
 
 const char bootMessage[]	PROGMEM = "Initialising...";
-const char newLine[]		PROGMEM = "\r\n";
 
+extern void *__heap_start;
 u08 sectBuff[512];
 
 void alive(void) {
@@ -34,12 +35,15 @@ int main (void) {
 	PORTA = 0xFF;
 	DDRA = 0xFF;
 	// _delay
-	uart_init(51);
-	uart_transmit_const_string(bootMessage);
-	uart_transmit_const_string(newLine);
+	uartInit();
+	uartSetBaudRate(0,9600);
+	rprintfInit(uart0SendByte);
+
+	rprintfProgStr(bootMessage);
+	rprintfCRLF();
 	
 	// Make sure that our large buffer is in .bss
-	if( sectBuff < __heap_start ) {
+	if( (void *)sectBuff < __heap_start ) {
 		//Success
 		cbi(PORTA, PA0);
 		_delay_ms(500);
@@ -58,7 +62,7 @@ int main (void) {
 	else {
 		mmcRead(0,sectBuff);
 		for(i = 0; i < 32; i++) {
-			uart_transmit_byte(sectBuff[i]);
+			rprintfChar(sectBuff[i]);
 		}
 	}
 
@@ -67,9 +71,8 @@ int main (void) {
 	for(;;) {
 		temperature = read_temperature();
 		format_temperature(tmpStringBuff, temperature);
-		uart_transmit_string(tmpStringBuff);
-		uart_transmit_byte('\r');
-		uart_transmit_byte('\n');
+		rprintfProgStr(tmpStringBuff);
+		rprintfCRLF();
 		// uart_transmit_byte(temperature >> 8);
 		// uart_transmit_byte(temperature & 0xFF);
 		// uart_transmit_string(newLine);

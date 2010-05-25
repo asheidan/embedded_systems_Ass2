@@ -72,7 +72,7 @@ def add_builders(env):
 	def generate_hex(source, target, env, for_signature):
 		assert(len(source)==1)
 		assert(len(target)==1)
-		result = '$OBJCOPY -O $HEXFORMAT -j .text -j .data'
+		result = '$OBJCOPY -O $HEXFORMAT -j .text -j .data -j .bss'
 		result += ' %s %s'%(source[0],target[0])
 		return result
 	

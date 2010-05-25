@@ -19,11 +19,12 @@ dude	= Environment(
 				MCU=mcu,PROGRAMMER=programmer,AVRPATH=crosspack)
 
 avr.Append(CPPPATH=['.','avrlib'])
-avr.Append(CFLAGS=['-Os','-Wall'])
+avr.Append(CFLAGS=['-Os','-Wall','-std=gnu99','-funsigned-char','-funsigned-bitfields','-fshort-enums','-fpack-struct'])
 
 ### Procyon ##################################################################
 # net_files	   = [os.path.join('net', f) for f in Split('arp.c dhcp.c icmp.c ip.c net.c netstack.c')]
-general_files   = [os.path.join('avrlib',f) for f in Split('spi.c')]
+
+general_files   = [os.path.join('avrlib',f) for f in Split('spi.c mmc.c rprintf.c')]
 # # general_files.append('uart2.c')
 # 
 procyon = avr.Library('procyon', general_files)
@@ -51,13 +52,13 @@ Depends(global_header, 'SConstruct')
 
 target = avr.Program(Split('main.c uart.c lm74.c'),LIBS=['procyon'],LIBPATH=['.'])
 Depends(target,procyon)
-avr.DisplaySizes(target)
+avr.DisplaySizes('size',target)
 
 hex_file = avr.HexFile(target)
 avr.EepFile(target)
 avr.DisplayASM('asm',target)
 
-Default(target)
+Default(hex_file)
 
 if sys.platform != 'win32':
 	dude.ReadFuses()

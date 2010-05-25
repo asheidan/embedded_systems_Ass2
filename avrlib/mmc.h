@@ -32,7 +32,7 @@
 ///	    / 9                |	Pins 8 and 9 are present only on SD cards
 ///	    |    MMC/SD Card   |
 ///	    |                  |
-///	    /\/\/\/\/\/\/\/\/\/\
+///	    ####################
 ///	    1 - CS   (chip select)          - wire to any available I/O pin(*)
 ///	    2 - DIN  (data in, card<-host)  - wire to SPI MOSI pin
 ///	    3 - VSS  (ground)               - wire to ground

@@ -25,20 +25,20 @@
 
 #include "enc28j60.h"
 
-#ifdef SPDR0
-	#define SPDR	SPDR0
-	#define SPCR	SPCR0
-	#define SPSR	SPSR0
-
-	#define SPIF	SPIF0
-	#define MSTR	MSTR0
-	#define CPOL	CPOL0
-	#define DORD	DORD0
-	#define SPR0	SPR00
-	#define SPR1	SPR01
-	#define SPI2X	SPI2X0
-	#define SPE		SPE0
-#endif
+// #ifdef SPDR0
+// 	#define SPDR	SPDR0
+// 	#define SPCR	SPCR0
+// 	#define SPSR	SPSR0
+// 
+// 	#define SPIF	SPIF0
+// 	#define MSTR	MSTR0
+// 	#define CPOL	CPOL0
+// 	#define DORD	DORD0
+// 	#define SPR0	SPR00
+// 	#define SPR1	SPR01
+// 	#define SPI2X	SPI2X0
+// 	#define SPE		SPE0
+// #endif
 
 // include configuration
 #include "enc28j60conf.h"
@@ -149,16 +149,26 @@ u08 enc28j60ReadOp(u08 op, u08 address)
 
 void enc28j60WriteOp(u08 op, u08 address, u08 data)
 {
+	#if ENC28J60_DEBUG >= 3
+	rprintf("ENC28J60 Writing operation(0x%x,%x,%x)\r\n",op,address,data);
+	#endif
 	// assert CS
 	ENC28J60_CONTROL_PORT &= ~(1<<ENC28J60_CONTROL_CS);
 
 	// issue write command
 	SPDR = op | (address & ADDR_MASK);
+	#if ENC28J60_DEBUG >= 5
+	rprintf("ENC28J60 Waiting for response\r\n");
+	#endif
+
 	while(!(SPSR & (1<<SPIF)));
 	// write data
 	SPDR = data;
 	while(!(SPSR & (1<<SPIF)));
 
+	#if ENC28J60_DEBUG >= 5
+	rprintf("ENC28J60 Got response\r\n");
+	#endif
 	// release CS
 	ENC28J60_CONTROL_PORT |= (1<<ENC28J60_CONTROL_CS);
 }
@@ -264,36 +274,45 @@ void enc28j60PhyWrite(u08 address, u16 data)
 
 void enc28j60Init(void)
 {
+	#if ENC28J60_DEBUG > 0
+	rprintf("Initializing ENC29J60\r\n");
+	#endif
 	// initialize I/O
 	sbi(ENC28J60_CONTROL_DDR, ENC28J60_CONTROL_CS);
 	sbi(ENC28J60_CONTROL_PORT, ENC28J60_CONTROL_CS);
 
-	// setup SPI I/O pins
-	sbi(ENC28J60_SPI_PORT, ENC28J60_SPI_SCK);	// set SCK hi
-	sbi(ENC28J60_SPI_DDR, ENC28J60_SPI_SCK);	// set SCK as output
-	cbi(ENC28J60_SPI_DDR, ENC28J60_SPI_MISO);	// set MISO as input
-	sbi(ENC28J60_SPI_DDR, ENC28J60_SPI_MOSI);	// set MOSI as output
-	sbi(ENC28J60_SPI_DDR, ENC28J60_SPI_SS);		// SS must be output for Master mode to work
-	// initialize SPI interface
-	// master mode
-	sbi(SPCR, MSTR);
-	// select clock phase positive-going in middle of data
-	cbi(SPCR, CPOL);
+	// // setup SPI I/O pins
+	// sbi(ENC28J60_SPI_PORT, ENC28J60_SPI_SCK);	// set SCK hi
+	// sbi(ENC28J60_SPI_DDR, ENC28J60_SPI_SCK);	// set SCK as output
+	// cbi(ENC28J60_SPI_DDR, ENC28J60_SPI_MISO);	// set MISO as input
+	// sbi(ENC28J60_SPI_DDR, ENC28J60_SPI_MOSI);	// set MOSI as output
+	// sbi(ENC28J60_SPI_DDR, ENC28J60_SPI_SS);		// SS must be output for Master mode to work
+	// // initialize SPI interface
+	// // master mode
+	// sbi(SPCR, MSTR);
+	// // select clock phase positive-going in middle of data
+	// cbi(SPCR, CPOL);
 	// Data order MSB first
-	cbi(SPCR,DORD);
-	// switch to f/4 2X = f/2 bitrate
-	cbi(SPCR, SPR0);
-	cbi(SPCR, SPR1);
-	sbi(SPSR, SPI2X);
-	// enable SPI
-	sbi(SPCR, SPE);
+	// cbi(SPCR,DORD);
+	// // switch to f/4 2X = f/2 bitrate
+	// cbi(SPCR, SPR0);
+	// cbi(SPCR, SPR1);
+	// sbi(SPSR, SPI2X);
+	// // enable SPI
+	// sbi(SPCR, SPE);
 
 	// perform system reset
+	#if ENC28J60_DEBUG >= 2
+	rprintf("Resetting ENC29J60\r\n");
+	#endif
 	enc28j60WriteOp(ENC28J60_SOFT_RESET, 0, ENC28J60_SOFT_RESET);
 	// check CLKRDY bit to see if reset is complete
 	delay_us(50);
 	while(!(enc28j60Read(ESTAT) & ESTAT_CLKRDY));
 
+	#if ENC28J60_DEBUG >= 2
+	rprintf("ENC28J60 Configuring\r\n");
+	#endif
 	// do bank 0 stuff
 	// initialize receive buffer
 	// 16-bit transfers, must write low byte first
@@ -330,6 +349,9 @@ void enc28j60Init(void)
 	enc28j60Write(MAMXFLL, MAX_FRAMELEN&0xFF);	
 	enc28j60Write(MAMXFLH, MAX_FRAMELEN>>8);
 
+	#if ENC28J60_DEBUG >= 2
+	rprintf("ENC28J60 Setting MAC-address\r\n");
+	#endif
 	// do bank 3 stuff
 	// write MAC address
 	// NOTE: MAC address in ENC28J60 is byte-backward
@@ -340,10 +362,17 @@ void enc28j60Init(void)
 	enc28j60Write(MAADR1, ENC28J60_MAC4);
 	enc28j60Write(MAADR0, ENC28J60_MAC5);
 
+	
+	#if ENC28J60_DEBUG >= 2
+	rprintf("ENC28J60 Loopback-what?\r\n");
+	#endif
 	// no loopback of transmitted frames
 	enc28j60PhyWrite(PHCON2, PHCON2_HDLDIS);
 
 	// switch to bank 0
+	#if ENC28J60_DEBUG >= 2
+	rprintf("ENC28J60 Enabling interrupts\r\n");
+	#endif
 	enc28j60SetBank(ECON1);
 	// enable interrutps
 	enc28j60WriteOp(ENC28J60_BIT_FIELD_SET, EIE, EIE_INTIE|EIE_PKTIE);
@@ -380,6 +409,9 @@ void enc28j60Init(void)
 
 	// setup duplex ----------------------
 */
+	#if ENC28J60_DEBUG >= 2
+	rprintf("ENC28J60 Reached end of init\r\n");
+	#endif
 }
 
 void enc28j60PacketSend(unsigned int len, unsigned char* packet)

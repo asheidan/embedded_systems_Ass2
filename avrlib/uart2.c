@@ -355,25 +355,25 @@ void uartReceiveService(u08 nUart)
 	}
 }
 
-ISR(USART0_TX_vect)      
+UART_INTERRUPT_HANDLER(USART0_TX_vect)      
 {
 	// service UART0 transmit interrupt
 	uartTransmitService(0);
 }
 
-ISR(USART1_TX_vect)      
+UART_INTERRUPT_HANDLER(USART1_TX_vect)      
 {
 	// service UART1 transmit interrupt
 	uartTransmitService(1);
 }
 
-ISR(USART0_RX_vect)      
+UART_INTERRUPT_HANDLER(USART0_RX_vect)      
 {
 	// service UART0 receive interrupt
 	uartReceiveService(0);
 }
 
-ISR(USART1_RX_vect)      
+UART_INTERRUPT_HANDLER(USART1_RX_vect)      
 {
 	// service UART1 receive interrupt
 	uartReceiveService(1);

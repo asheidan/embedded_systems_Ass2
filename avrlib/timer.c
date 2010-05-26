@@ -95,7 +95,7 @@ void timer0Init()
 	// initialize timer 0
 	timer0SetPrescaler( TIMER0PRESCALE );	// set prescaler
 	outb(TCNT0, 0);							// reset TCNT0
-	sbi(TIMSK, TOIE0);						// enable TCNT0 overflow interrupt
+	sbi(TIMSK0, TOIE0);						// enable TCNT0 overflow interrupt
 
 	timer0ClearOverflowCount();				// initialize time registers
 }
@@ -106,7 +106,7 @@ void timer1Init(void)
 	timer1SetPrescaler( TIMER1PRESCALE );	// set prescaler
 	outb(TCNT1H, 0);						// reset TCNT1
 	outb(TCNT1L, 0);
-	sbi(TIMSK, TOIE1);						// enable TCNT1 overflow
+	sbi(TIMSK1, TOIE1);						// enable TCNT1 overflow
 }
 
 #ifdef TCNT2	// support timer2 only if it exists
@@ -115,7 +115,7 @@ void timer2Init(void)
 	// initialize timer 2
 	timer2SetPrescaler( TIMER2PRESCALE );	// set prescaler
 	outb(TCNT2, 0);							// reset TCNT2
-	sbi(TIMSK, TOIE2);						// enable TCNT2 overflow
+	sbi(TIMSK2, TOIE2);						// enable TCNT2 overflow
 
 	timer2ClearOverflowCount();				// initialize time registers
 }
@@ -124,7 +124,7 @@ void timer2Init(void)
 void timer0SetPrescaler(u08 prescale)
 {
 	// set prescaler on timer 0
-	outb(TCCR0, (inb(TCCR0) & ~TIMER_PRESCALE_MASK) | prescale);
+	outb(TCCR0B, (inb(TCCR0B) & ~TIMER_PRESCALE_MASK) | prescale);
 }
 
 void timer1SetPrescaler(u08 prescale)
@@ -137,14 +137,14 @@ void timer1SetPrescaler(u08 prescale)
 void timer2SetPrescaler(u08 prescale)
 {
 	// set prescaler on timer 2
-	outb(TCCR2, (inb(TCCR2) & ~TIMER_PRESCALE_MASK) | prescale);
+	outb(TCCR2B, (inb(TCCR2B) & ~TIMER_PRESCALE_MASK) | prescale);
 }
 #endif
 
 u16 timer0GetPrescaler(void)
 {
 	// get the current prescaler setting
-	return (pgm_read_word(TimerPrescaleFactor+(inb(TCCR0) & TIMER_PRESCALE_MASK)));
+	return (pgm_read_word(TimerPrescaleFactor+(inb(TCCR0B) & TIMER_PRESCALE_MASK)));
 }
 
 u16 timer1GetPrescaler(void)
@@ -160,7 +160,7 @@ u16 timer2GetPrescaler(void)
 	// that timer2 is the RTC timer?
 
 	// get the current prescaler setting
-	return (pgm_read_word(TimerRTCPrescaleFactor+(inb(TCCR2) & TIMER_PRESCALE_MASK)));
+	return (pgm_read_word(TimerRTCPrescaleFactor+(inb(TCCR2B) & TIMER_PRESCALE_MASK)));
 }
 #endif
 
@@ -393,7 +393,7 @@ void timer1PWMBSet(u16 pwmDuty)
 }
 
 //! Interrupt handler for tcnt0 overflow interrupt
-TIMER_INTERRUPT_HANDLER(SIG_OVERFLOW0)
+TIMER_INTERRUPT_HANDLER(TIMER0_OVF_vect)
 {
 	Timer0Reg0++;			// increment low-order counter
 
@@ -406,7 +406,7 @@ TIMER_INTERRUPT_HANDLER(SIG_OVERFLOW0)
 }
 
 //! Interrupt handler for tcnt1 overflow interrupt
-TIMER_INTERRUPT_HANDLER(SIG_OVERFLOW1)
+TIMER_INTERRUPT_HANDLER(TIMER1_OVF_vect)
 {
 	// if a user function is defined, execute it
 	if(TimerIntFunc[TIMER1OVERFLOW_INT])
@@ -415,7 +415,7 @@ TIMER_INTERRUPT_HANDLER(SIG_OVERFLOW1)
 
 #ifdef TCNT2	// support timer2 only if it exists
 //! Interrupt handler for tcnt2 overflow interrupt
-TIMER_INTERRUPT_HANDLER(SIG_OVERFLOW2)
+TIMER_INTERRUPT_HANDLER(TIMER2_OVF_vect)
 {
 	Timer2Reg0++;			// increment low-order counter
 
@@ -437,7 +437,7 @@ TIMER_INTERRUPT_HANDLER(SIG_OUTPUT_COMPARE0)
 #endif
 
 //! Interrupt handler for CutputCompare1A match (OC1A) interrupt
-TIMER_INTERRUPT_HANDLER(SIG_OUTPUT_COMPARE1A)
+TIMER_INTERRUPT_HANDLER(TIMER1_COMPA_vect)
 {
 	// if a user function is defined, execute it
 	if(TimerIntFunc[TIMER1OUTCOMPAREA_INT])
@@ -445,7 +445,7 @@ TIMER_INTERRUPT_HANDLER(SIG_OUTPUT_COMPARE1A)
 }
 
 //! Interrupt handler for OutputCompare1B match (OC1B) interrupt
-TIMER_INTERRUPT_HANDLER(SIG_OUTPUT_COMPARE1B)
+TIMER_INTERRUPT_HANDLER(TIMER1_COMPB_vect)
 {
 	// if a user function is defined, execute it
 	if(TimerIntFunc[TIMER1OUTCOMPAREB_INT])
@@ -453,7 +453,7 @@ TIMER_INTERRUPT_HANDLER(SIG_OUTPUT_COMPARE1B)
 }
 
 //! Interrupt handler for InputCapture1 (IC1) interrupt
-TIMER_INTERRUPT_HANDLER(SIG_INPUT_CAPTURE1)
+TIMER_INTERRUPT_HANDLER(TIMER1_CAPT_vect)
 {
 	// if a user function is defined, execute it
 	if(TimerIntFunc[TIMER1INPUTCAPTURE_INT])
@@ -461,7 +461,7 @@ TIMER_INTERRUPT_HANDLER(SIG_INPUT_CAPTURE1)
 }
 
 //! Interrupt handler for OutputCompare2 match (OC2) interrupt
-TIMER_INTERRUPT_HANDLER(SIG_OUTPUT_COMPARE2)
+TIMER_INTERRUPT_HANDLER(TIMER2_COMPA_vect)
 {
 	// if a user function is defined, execute it
 	if(TimerIntFunc[TIMER2OUTCOMPARE_INT])

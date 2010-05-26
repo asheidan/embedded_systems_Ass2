@@ -14,6 +14,7 @@
 #include "mmc.h"
 #include "uart2.h"
 #include "rprintf.h"
+#include "net/netstack.h"
 
 // Local headers
 #include "lm74.h"
@@ -68,10 +69,10 @@ int main (void) {
 	u16 temperature;
 	PORTA = 0xFF;
 	DDRA = 0xFF;
-
+	u08 i;
 
 	uartInit();
-	uartSetBaudRate(0,1200);
+	uartSetBaudRate(0,9600);
 	rprintfInit(uart0SendByte);
 
 	_delay_ms(1000);
@@ -88,12 +89,14 @@ int main (void) {
 	// }
 	//rprintfInit(uart_transmit_byte);
 
-	// spiInit();
+	spiInit();
+	lm74Init();
 	mmcInit();
 	// uart_transmit_byte(mmcReset());
-	while(0x0 != mmcReset()) {
+	mmcReset();
+	//while(0x0 != mmcReset()) {
 		_delay_ms(100);
-	}
+	//}
 
 	sectBuff[0] = 'a';
 	sectBuff[1] = 'b';
@@ -101,7 +104,9 @@ int main (void) {
 	sectBuff[3] = 'd';
 	sectBuff[4] = 'e';
 
-	while(0x0 != mmcWrite(0x40000, sectBuff)) {
+	i = -1;
+	while((0x0 != i) && (0x5 != i)) {
+		i = mmcWrite(0x40000, sectBuff);
 		_delay_ms(100);
 	}
 	memset(sectBuff, 0, sizeof(u08)*sectBuffSize);
@@ -109,10 +114,16 @@ int main (void) {
 		_delay_ms(100);
 	}
 
-	rprintfStr(sectBuff);
+	rprintfStr((char *)sectBuff);
 	rprintfCRLF();
 
-	// set_sleep_mode(SLEEP_MODE_IDLE);
+	/**
+	 * Setting
+	 * ip:	10.0.0.42
+	 * netm:	255.255.255.0
+	 * gw:	10.0.0.1
+	 */
+	netstackInit(0xa000024,0xffffff00,0xa000001);
 	// 
 	for(;;) {
 		temperature = read_temperature();

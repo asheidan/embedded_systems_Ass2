@@ -32,14 +32,15 @@ if(GetOption('simulator')):
 	cflags += ['-D__SIMULATOR__','-Wl,--undefined=_mmcu,--section-start=.mmcu=0x910000']
 
 avr.Append(CFLAGS=cflags)
+avr.Append(LINKFLAGS='-Wl,--gc-sections,--print-gc-sections')
 
 ### Procyon ##################################################################
-# net_files	   = [os.path.join('net', f) for f in Split('arp.c dhcp.c icmp.c ip.c net.c netstack.c')]
-
-general_files   = [os.path.join('avrlib',f) for f in Split('spi.c mmc.c uart2.c rprintf.c buffer.c')]
+net_files	   = [os.path.join('avrlib','net', f) for f in Split('arp.c dhcp.c icmp.c ip.c net.c netstack.c')]
+nic_driver = ['avrlib/net/enc28j60.c']
+general_files   = [os.path.join('avrlib',f) for f in Split('spi.c mmc.c uart2.c rprintf.c buffer.c timer.c')]
 # # general_files.append('uart2.c')
 # 
-procyon = avr.Library('procyon', general_files)
+procyon = avr.Library('procyon', general_files + nic_driver + net_files)
 # avr.DisplaySizes(procyon,TOTALS=True)
 
 ##############################################################################

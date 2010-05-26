@@ -12,4 +12,6 @@
 
 #include "bits.h"
 
+#define NETSTACK_DEBUG
+
 #endif

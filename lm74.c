@@ -8,6 +8,11 @@
 #define TEMPERATURE_START 3
 #define TEMPERATURE_DECIMALS (TEMPERATURE_POINT - TEMPERATURE_START)
 
+void lm74Init(void) {
+	spiInit();
+	read_temperature();
+}
+
 int format_temperature (char* buf, short temperature)
 {
 	int i = 0;

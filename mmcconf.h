@@ -6,6 +6,6 @@
 
 #define MMC_CS_PIN PA1
 
-// #define MMC_DEBUG
+#define MMC_DEBUG
 
 #endif

@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include "lm74.h"
+#include "lm74conf.h"
 
 #include "spi.h"
 
@@ -49,8 +50,8 @@ int format_temperature (char* buf, short temperature)
 
 int read_temperature(void) {
 	u16 result;
-	cbi(PORTA,LM74_CS);
+	cbi(LM74_CS_PORT,LM74_CS_PIN);
 	result = spiTransferWord(0);
-	sbi(PORTA,LM74_CS);
+	sbi(LM74_CS_PORT,LM74_CS_PIN);
 	return (int)result;
 }

@@ -7,6 +7,7 @@
 
 #include <stdlib.h>
 #include <util/delay.h>
+#include <string.h>
 
 // Procyon headers
 #include "spi.h"
@@ -15,67 +16,112 @@
 #include "rprintf.h"
 
 // Local headers
-#include "uart.h"
 #include "lm74.h"
+
+#ifdef __SIMULATOR__
+
+#include "../simavr/include/avr_mcu_section.h"
+AVR_MCU(F_CPU, "atmega644");
+
+#include <stdio.h>
+static int uart_putchar(char c, FILE *stream) {
+  if (c == '\n')
+    uart_putchar('\r', stream);
+  loop_until_bit_is_set(UCSR0A, UDRE0);
+  UDR0 = c;
+  return 0;
+}
+
+static FILE mystdout = FDEV_SETUP_STREAM(uart_putchar, NULL,
+                                         _FDEV_SETUP_WRITE);
+
+#define ifsim(...) __VA_ARGS__
+
+#else
+#define ifsim(...)
+#endif
 
 const char bootMessage[]	PROGMEM = "Initialising...";
 
-extern void *__heap_start;
-u08 sectBuff[512];
+#define sectBuffSize 512
+u08 sectBuff[sectBuffSize];
 
 void alive(void) {
 	cbi(PORTA,PA0);
 	_delay_ms(500);
 	sbi(PORTA,PA0);
+	_delay_ms(500);
 }
+
+//static void (*nisse)(unsigned char c);
+
+void nisse(const prog_char str[]) {
+	register char c;
+	uart0SendByte('\n');
+	uart0SendByte('\r');
+	while((c = pgm_read_byte(str++)))
+		uart0SendByte(c);
+}
+
 int main (void) {
 	char tmpStringBuff[16];
-	u08 i;
 	u16 temperature;
 	PORTA = 0xFF;
 	DDRA = 0xFF;
-	// _delay
+
+
 	uartInit();
-	uartSetBaudRate(0,9600);
+	uartSetBaudRate(0,1200);
 	rprintfInit(uart0SendByte);
+
+	_delay_ms(1000);
 
 	rprintfProgStr(bootMessage);
 	rprintfCRLF();
 	
 	// Make sure that our large buffer is in .bss
-	if( (void *)sectBuff < __heap_start ) {
-		//Success
-		cbi(PORTA, PA0);
-		_delay_ms(500);
-		sbi(PORTA, PA0);
-	}
+	// if( (void *)sectBuff < __heap_start ) {
+	// 	//Success
+	// 	cbi(PORTA, PA0);
+	// 	_delay_ms(500);
+	// 	sbi(PORTA, PA0);
+	// }
 	//rprintfInit(uart_transmit_byte);
 
 	// spiInit();
 	mmcInit();
 	// uart_transmit_byte(mmcReset());
-	if(0x0 != mmcReset()) {
-		cbi(PORTA,PA0);
-		// 	uart_transmit_const_string(bootMessage);
-		// 	uart_transmit_const_string(newLine);
+	while(0x0 != mmcReset()) {
+		_delay_ms(100);
 	}
-	else {
-		mmcRead(0,sectBuff);
-		for(i = 0; i < 32; i++) {
-			rprintfChar(sectBuff[i]);
-		}
+
+	sectBuff[0] = 'a';
+	sectBuff[1] = 'b';
+	sectBuff[2] = 'c';
+	sectBuff[3] = 'd';
+	sectBuff[4] = 'e';
+
+	while(0x0 != mmcWrite(0x40000, sectBuff)) {
+		_delay_ms(100);
 	}
+	memset(sectBuff, 0, sizeof(u08)*sectBuffSize);
+	while(0x0 != mmcRead(0x40000,sectBuff)) {
+		_delay_ms(100);
+	}
+
+	rprintfStr(sectBuff);
+	rprintfCRLF();
 
 	// set_sleep_mode(SLEEP_MODE_IDLE);
 	// 
 	for(;;) {
 		temperature = read_temperature();
 		format_temperature(tmpStringBuff, temperature);
-		rprintfProgStr(tmpStringBuff);
+		rprintfStr(tmpStringBuff);
 		rprintfCRLF();
 		// uart_transmit_byte(temperature >> 8);
 		// uart_transmit_byte(temperature & 0xFF);
 		// uart_transmit_string(newLine);
-		_delay_ms(1000);
+		_delay_ms(10000);
 	}
 }

@@ -45,6 +45,7 @@ def setup_tools(env):
 def add_flags(env):
 	assert(env['MCU'])
 	env.Append(CFLAGS='-mmcu='+env['MCU'])
+	env.Append(LINKFLAGS='-mmcu='+env['MCU'])
 
 def add_builders(env):
 	def generate_elf(source, target, env, for_signature):

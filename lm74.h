@@ -5,7 +5,6 @@
 
 #include "global.h"
 
-#define LM74_CS PINA2
 
 int format_temperature (char* buf, short temperature);
 int read_temperature (void);

@@ -52,7 +52,9 @@ AVRDUDE = avrdude $(PROGRAMMER) -p $(DEVICE)
 COMPILE = $(AVR-CC) $(CFLAGS) -mmcu=$(DEVICE)
 
 # default: $(TARGET)
-default: lib/libprocyon.a
+# default: lib/libprocyon.a
+default:
+	@echo "We switched to scons, remember?"
 
 # Including generated dependencies
 ifneq "$(MAKECMDGOALS)" "clean"

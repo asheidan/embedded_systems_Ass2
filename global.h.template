@@ -13,5 +13,7 @@
 #include "bits.h"
 
 #define NETSTACK_DEBUG
+//#define NET_DEBUG 5
+#define ICMP_DEBUG_PRINT
 
 #endif

@@ -12,11 +12,18 @@
 
 #include "bits.h"
 
+#define VERSION_NUMBER 0x01
+
 // #define NETSTACK_DEBUG
 // #define NET_DEBUG 5
 // #define ICMP_DEBUG_PRINT
 // #define ARB_DEBUG
 // #define ARP_DEBUG_PRINT
 // #define UART_USE_INT
+
+#define sectBuffSize 512
+extern u08 sectBuff[sectBuffSize];
+extern u32 mmcSectorCount;
+extern u16 mmcSectorSize;
 
 #endif

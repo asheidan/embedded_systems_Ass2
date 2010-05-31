@@ -56,6 +56,7 @@ int main (void) {
 	DDRA = 0xFF;
 	u08 i;
 	//u08 *p;
+	char bu[16];
 
 	uartInit();
 	uartSetBaudRate(0,57600l);
@@ -118,6 +119,10 @@ int main (void) {
 	init_temperature_timer();
 
 	for(;;);
+		u16 temperature = read_temperature();
+		format_temperature(bu,temperature);
+		rprintfStr(bu);
+		rprintfCRLF();
 }
 
 ISR(USART0_RX_vect)
@@ -152,8 +157,20 @@ ISR(USART0_RX_vect)
 			break;
 		}
 
-		default:
+		case 'r': {
+			mmcFormatCard();
 			break;
+		}
+
+		case 'm': {
+			mmcInitCard();
+			break;
+		 }
+
+		default: {
+			rprintfProgStrM("i: Show information about the system\r\nd: Download current data\r\nr: Erase saved data\r\nm: Mount new card\r\nh: Show this help\r\n");
+			break;
+		}
 	}
 }
 

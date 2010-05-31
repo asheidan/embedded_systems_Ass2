@@ -3,47 +3,18 @@
 #include <avr/Interrupt.h>
 
 #include "mmc.h"
-#include "lm74.h"
-#define TIMER_PRESCALE_MASK		0x07	///< Timer Prescaler Bit-Mask
+#include "timer.h"
 #include "rprintf.h"
+#include "lm74.h"
 
 #include "global.h"
+#include "mmcfunctions.h"
+#define TIMER_PRESCALE_MASK		0x07	///< Timer Prescaler Bit-Mask
 
-
-//u32 current_sector;
-volatile char mmc_buf[512];
-volatile char config_buf[512];
-volatile config *conf;
-volatile int mmc_buf_i;
-
-u08 checksum(u32 data) {
-	u08 *d = (u08 *)&data;
-	return d[0] + d[1] + d[2] + d[3] + VERSION_NUMBER;
-}
 
 void init_temperature_timer (void)
 {
-	mmcRead(CONFIG_SECTOR, config_buf);
-	conf = (config *)config_buf;
-	if (
-			(VERSION_NUMBER == conf->version_number) &&
-			(checksum(conf->current_sector) == conf->check_sum)) {
-		// Config validates, use end sector.
-		rprintfProgStrM("TIMER Old card...\r\n");
-		rprintfProgStrM("TIMER Current sector: 0x");
-		rprintfu32(conf->current_sector);
-		rprintfCRLF();
-		mmcRead(conf->current_sector, mmc_buf);
-		mmc_buf_i = strlen(mmc_buf);
-	} else {
-		// Start anew.
-		rprintfProgStrM("TIMER New card...\r\n");
-		conf->current_sector = START_SECTOR;
-		conf->version_number = VERSION_NUMBER;
-		conf->check_sum = checksum(conf->current_sector);
-		mmcWrite(CONFIG_SECTOR, config_buf);
-		mmc_buf_i = 0;
-	}
+	mmcInitCard();
 
 	outb(TCCR1B, 1<<WGM12);
 	outb(TCCR1B, (inb(TCCR1B) & ~TIMER_PRESCALE_MASK) | 4); // Prescaler 256
@@ -56,8 +27,21 @@ void temperature_timer_interrupt (void)
 {
 
 	char buf[16];
-	int i;
-	int temperature = read_temperature();
+	u08 i;
+	short temperature;
+
+	if(conf->current_sector > mmcSectorCount) {
+		cbi(PORTA,PA0);
+		return;
+	}
+	else {
+		sbi(PORTA,PA0);
+	}
+
+  
+	do {
+		temperature = read_temperature();
+	} while(temperature>>TEMPERATURE_POINT < -200);
 
 	// Format temperature.
 	format_temperature(buf, temperature);
@@ -66,7 +50,7 @@ void temperature_timer_interrupt (void)
 		buf[i + 1]++;
 	buf[i + 2] = '\0';
 
-	cbi(PORTA, PA0);
+	//cbi(PORTA, PA0);
 	if (mmc_buf_i != 0 || conf->current_sector != START_SECTOR)
 		write_char('\n');
 
@@ -79,7 +63,7 @@ void temperature_timer_interrupt (void)
 	// Write to sector.
 	mmcWrite(conf->current_sector, mmc_buf);
 
-	sbi(PORTA, PA0);
+	//sbi(PORTA, PA0);
 }
 
 void write_char (char c)

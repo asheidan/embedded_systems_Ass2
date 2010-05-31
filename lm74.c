@@ -4,7 +4,6 @@
 
 #include "spi.h"
 
-#define TEMPERATURE_POINT 7
 #define TEMPERATURE_START 3
 #define TEMPERATURE_DECIMALS (TEMPERATURE_POINT - TEMPERATURE_START)
 
@@ -13,7 +12,7 @@ void lm74Init(void) {
 	read_temperature();
 }
 
-int format_temperature (char* buf, short temperature)
+u08 format_temperature (char* buf, short temperature)
 {
 	int i = 0;
 
@@ -53,10 +52,10 @@ int format_temperature (char* buf, short temperature)
 }
 
 
-int read_temperature(void) {
+short read_temperature(void) {
 	u16 result;
 	cbi(LM74_CS_PORT,LM74_CS_PIN);
 	result = spiTransferWord(0);
 	sbi(LM74_CS_PORT,LM74_CS_PIN);
-	return (int)result;
+	return (u16)result;
 }

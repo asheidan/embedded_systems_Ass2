@@ -5,8 +5,9 @@
 
 #include "global.h"
 
+#define TEMPERATURE_POINT 7
 
 void lm74Init(void);
-int format_temperature (char* buf, short temperature);
-int read_temperature (void);
+u08 format_temperature (char* buf, short temperature);
+short read_temperature (void);
 #endif

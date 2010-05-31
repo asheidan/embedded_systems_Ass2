@@ -61,6 +61,7 @@ int main (void) {
 
 	uartInit();
 	uartSetBaudRate(0,9600);
+	UCSR0B |= _BV(RXCIE);
 	rprintfInit(uart0SendByte);
 
 	_delay_ms(1000);
@@ -119,5 +120,42 @@ int main (void) {
 	init_temperature_timer();
 
 	for(;;);
+}
+
+ISR(USART_RXC_vect)
+{
+	u08 data = UDR;
+
+	switch (data) {
+		case 'i':
+			rprintfProgramStrM("Version: ");
+			rprintfu08(VERSION_NUMBER);
+			rprintfProgramStrM("\r\nCurrent sector: ");
+			rprintfu32(conf->current_sector);
+			rprintfProgramStrM("\r\nTotal sectors: ");
+			rprintfu32(mmcSectorCount);
+			rprintfProgramStrM("\r\nSector size: ");
+			rprintfu16(mmcSectorSize);
+			rprintfCRLF();
+			break;
+
+		case 'd': {
+			int i;
+			int j;
+			char transmit_buf[512];
+
+			for (i = START_SECTOR; i < conf->current_sector - 1; i++) {
+				mmcRead(i, transmit_buf);
+				for (j = 0; j < 512; i++)
+					rprintfChar(transmit_buf[i]);
+			}
+			mmcRead(conf->current_sector, transmit_buf);
+			rprintfString(transmit_buf);
+			break;
+		}
+
+		default:
+			break;
+	}
 }
 

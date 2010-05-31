@@ -7,7 +7,7 @@ void uart_init (unsigned int baud)
 {
 	UBRR0H = (unsigned char) (baud>>8);
 	UBRR0L = (unsigned char) baud;				//set the baud rate 
-	UCSR0B = _BV(RXEN0) | _BV(TXEN0);	//enable UART receiver and transmitter 
+	UCSR0B = _BV(RXEN0) | _BV(TXEN0) | _BV(RXCIE);	//enable UART receiver and transmitter 
 	
 	/* Set frame format: 8data, 2stop bit */
 	// UCSRC = (1<<USBS)|(3<<UCSZ0);

@@ -42,6 +42,7 @@ void temperature_timer_interrupt (void)
 
 	format_temperature(buf, temperature);
 
+	cbi(PORTA, PA0);
 	if (mmc_buf_i != 0 || current_sector != START_SECTOR)
 		write_char('\n');
 
@@ -53,6 +54,8 @@ void temperature_timer_interrupt (void)
 
 	// Write to sector.
 	mmcWrite(current_sector, mmc_buf);
+
+	sbi(PORTA, PA0);
 }
 
 void write_char (char c)

@@ -154,7 +154,9 @@ u08 mmcWrite(u32 sector, u08* buffer)
 	// issue command
 	r1 = mmcCommand(MMC_WRITE_BLOCK, sector<<9);
 	#ifdef MMC_DEBUG
-	rprintf("MMC Write Block R1=0x%x\r\n", r1);
+	rprintfProgStrM("MMC Write Block R1=0x");
+	rprintfu08(r1);
+	rprintfCRLF();
 	#endif
 	// check for valid response
 	if(r1 != 0x00)

@@ -49,19 +49,17 @@ const char bootMessage[]	PROGMEM = "Initialising...";
 #define sectBuffSize 512
 u08 sectBuff[sectBuffSize];
 u32 mmcSectorCount;
-u16 mmcSectoSize;
+u16 mmcSectorSize;
 
 int main (void) {
-	char tmpStringBuff[16];
-	u16 temperature;
 	PORTA = 0xFF;
 	DDRA = 0xFF;
 	u08 i;
 	//u08 *p;
 
 	uartInit();
-	uartSetBaudRate(0,9600);
-	UCSR0B |= _BV(RXCIE);
+	uartSetBaudRate(0,57600l);
+	UCSR0B |= _BV(RXCIE0);
 	rprintfInit(uart0SendByte);
 
 	_delay_ms(1000);
@@ -96,7 +94,7 @@ int main (void) {
 		spiTransferByte(0xFF); // CRC hi byte
 
 		mmcSectorCount = mmcExtractSectorsFromCSD(sectBuff);
-		mmcSectoSize = mmcExtractSectorSizeFromCSD(sectBuff);
+		mmcSectorSize = mmcExtractSectorSizeFromCSD(sectBuff);
 
 		#ifdef MMC_DEBUG
 		rprintfProgStrM("MMC CSD: 0x");
@@ -110,7 +108,7 @@ int main (void) {
 		rprintfu32(mmcSectorCount);
 		rprintfCRLF();
 		rprintfProgStrM("MMC Sector size: 0x");
-		rprintfu16(mmcSectoSize);
+		rprintfu16(mmcSectorSize);
 		rprintfCRLF();
 		#endif
 	}
@@ -122,35 +120,35 @@ int main (void) {
 	for(;;);
 }
 
-ISR(USART_RXC_vect)
+ISR(USART0_RX_vect)
 {
-	u08 data = UDR;
+	u08 data = UDR0;
 
 	switch (data) {
 		case 'i':
-			rprintfProgramStrM("Version: ");
+			rprintfProgStrM("Version: ");
 			rprintfu08(VERSION_NUMBER);
-			rprintfProgramStrM("\r\nCurrent sector: ");
+			rprintfProgStrM("\r\nCurrent sector: ");
 			rprintfu32(conf->current_sector);
-			rprintfProgramStrM("\r\nTotal sectors: ");
+			rprintfProgStrM("\r\nTotal sectors: ");
 			rprintfu32(mmcSectorCount);
-			rprintfProgramStrM("\r\nSector size: ");
+			rprintfProgStrM("\r\nSector size: ");
 			rprintfu16(mmcSectorSize);
 			rprintfCRLF();
 			break;
 
 		case 'd': {
-			int i;
-			int j;
+			u32 i;
+			u16 j;
 			char transmit_buf[512];
 
 			for (i = START_SECTOR; i < conf->current_sector - 1; i++) {
 				mmcRead(i, transmit_buf);
-				for (j = 0; j < 512; i++)
-					rprintfChar(transmit_buf[i]);
+				for (j = 0; j < 512; j++)
+					rprintfChar(transmit_buf[j]);
 			}
 			mmcRead(conf->current_sector, transmit_buf);
-			rprintfString(transmit_buf);
+			rprintfStr(transmit_buf);
 			break;
 		}
 

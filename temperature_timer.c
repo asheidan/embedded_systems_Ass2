@@ -54,7 +54,6 @@ void init_temperature_timer (void)
 
 void temperature_timer_interrupt (void)
 {
-	rprintfProgStrM("TIMER Interrupt...\r\n");
 
 	char buf[16];
 	int i;

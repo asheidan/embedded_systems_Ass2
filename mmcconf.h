@@ -23,7 +23,7 @@
 #define MMCCONF_H
 
 // define to enable debugging print statements
-#define MMC_DEBUG
+//#define MMC_DEBUG
 
 // MMC card chip select pin defines
 #define MMC_CS_PORT			PORTA

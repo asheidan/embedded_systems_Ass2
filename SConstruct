@@ -63,7 +63,7 @@ global_header = avr.GenerateFromTemplate('global.h.template')
 Depends(global_header, 'SConstruct')
 
 
-target = avr.Program(Split('main.c lm74.c mmcfunctions.c'),LIBS=['procyon'],LIBPATH=['.'])
+target = avr.Program(Split('main.c lm74.c mmcfunctions.c temperature_timer.c'),LIBS=['procyon'],LIBPATH=['.'])
 Depends(target,procyon)
 avr.DisplaySizes('size',target)
 

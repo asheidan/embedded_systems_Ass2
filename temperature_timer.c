@@ -1,17 +1,21 @@
 #include "temperature_timer.h"
+#include <string.h>
+
+#include "mmc.h"
+#include "lm74.h"
 
 u32 current_sector;
 char mmc_buf[512];
 int mmc_buf_i;
 int overflows;
 
-init_temperature_timer (void)
+void init_temperature_timer (void)
 {
-	mmc_read(CONFIG_SECTOR, mmc_buf);
+	mmcRead(CONFIG_SECTOR, mmc_buf);
 	if (mmc_buf[0] + mmc_buf[1] + mmc_buf[2] + mmc_buf[3] == mmc_buf[4]) {
 		// Config validates, use end sector.
 		current_sector = *(u32*) mmc_buf;
-		mmc_read(current_sector, mmc_buf);
+		mmcRead(current_sector, mmc_buf);
 		mmc_buf_i = strlen(mmc_buf);
 	} else {
 		// Start anew.
@@ -38,7 +42,7 @@ void temperature_timer_interrupt (void)
 
 	format_temperature(buf, temperature);
 
-	if (mmc_buf_i != 0 || current_sector != SECTOR_START)
+	if (mmc_buf_i != 0 || current_sector != START_SECTOR)
 		write_char('\n');
 
 	for (i = 0; buf[i] != '\0'; i++)
@@ -48,7 +52,7 @@ void temperature_timer_interrupt (void)
 	mmc_buf_i--;
 
 	// Write to sector.
-	mmc_write(current_sector, mmc_buf);
+	mmcWrite(current_sector, mmc_buf);
 }
 
 void write_char (char c)
@@ -56,14 +60,14 @@ void write_char (char c)
 	// At end of sector.
 	if (mmc_buf_i == sizeof(mmc_buf)/sizeof(*mmc_buf)) {
 		// Write the sector..
-		mmc_write(current_sector, mmc_buf);
+		mmcWrite(current_sector, mmc_buf);
 		current_sector++;
 
 		// Write new end sector to config.
-		mmc_read(CONFIG_SECTOR, mmc_buf);
+		mmcRead(CONFIG_SECTOR, mmc_buf);
 		*(u32*) mmc_buf = current_sector;
 		mmc_buf[4] = mmc_buf[0] + mmc_buf[1] + mmc_buf[2] + mmc_buf[3];
-		mmc_write(CONFIG_SECTOR, mmc_buf);
+		mmcWrite(CONFIG_SECTOR, mmc_buf);
 
 		memset(mmc_buf, 0, sizeof(mmc_buf));
 		mmc_buf_i = 0;

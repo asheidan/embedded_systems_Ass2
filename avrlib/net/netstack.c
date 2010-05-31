@@ -83,6 +83,9 @@ int netstackService(void)
 			rprintfProgStrM("NET Rx: ARP packet\r\n");
 			#endif
 			arpArpIn(len, ((struct netEthArpHeader*)&NetBuffer[0]) );
+			#ifdef NETSTACK_DEBUG
+			//arpPrintTable();
+			#endif
 		}
 	}
 	return len;

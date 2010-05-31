@@ -25,6 +25,7 @@
 #include "uart2.h"
 
 // UART global variables
+#ifdef UART_USE_INT
 // flag variables
 volatile u08   uartReadyTx[2];
 volatile u08   uartBufferedTx[2];
@@ -43,6 +44,7 @@ unsigned short uartRxOverflow[2];
 
 typedef void (*voidFuncPtru08)(unsigned char);
 volatile static voidFuncPtru08 UartRxFunc[2];
+#endif
 
 void uartInit(void)
 {
@@ -53,14 +55,19 @@ void uartInit(void)
 
 void uart0Init(void)
 {
+	#ifdef UART_USE_INT
 	// initialize the buffers
 	uart0InitBuffers();
 	// initialize user receive handlers
 	UartRxFunc[0] = 0;
 	// enable RxD/TxD and interrupts
 	outb(UCSR0B, BV(RXCIE)|BV(TXCIE)|BV(RXEN)|BV(TXEN));
+	#else
+	outb(UCSR0B, BV(RXEN)|BV(TXEN));
+	#endif
 	// set default baud rate
 	uartSetBaudRate(0, UART0_DEFAULT_BAUD_RATE); 
+	#ifdef UART_USE_INT
 	// initialize states
 	uartReadyTx[0] = TRUE;
 	uartBufferedTx[0] = FALSE;
@@ -68,18 +75,22 @@ void uart0Init(void)
 	uartRxOverflow[0] = 0;
 	// enable interrupts
 	sei();
+	#endif
 }
 
 void uart1Init(void)
 {
+	#ifdef UART_USE_INT
 	// initialize the buffers
 	uart1InitBuffers();
 	// initialize user receive handlers
 	UartRxFunc[1] = 0;
 	// enable RxD/TxD and interrupts
 	outb(UCSR1B, BV(RXCIE)|BV(TXCIE)|BV(RXEN)|BV(TXEN));
+	#endif
 	// set default baud rate
 	uartSetBaudRate(1, UART1_DEFAULT_BAUD_RATE);
+	#ifdef UART_USE_INT
 	// initialize states
 	uartReadyTx[1] = TRUE;
 	uartBufferedTx[1] = FALSE;
@@ -87,8 +98,10 @@ void uart1Init(void)
 	uartRxOverflow[1] = 0;
 	// enable interrupts
 	sei();
+	#endif
 }
 
+#ifdef UART_USE_INT
 void uart0InitBuffers(void)
 {
 	#ifndef UART_BUFFER_EXTERNAL_RAM
@@ -101,7 +114,9 @@ void uart0InitBuffers(void)
 		bufferInit(&uartTxBuffer[0], (u08*) UART0_TX_BUFFER_ADDR, UART0_TX_BUFFER_SIZE);
 	#endif
 }
+#endif
 
+#ifdef UART_USE_INT
 void uart1InitBuffers(void)
 {
 	#ifndef UART_BUFFER_EXTERNAL_RAM
@@ -114,7 +129,9 @@ void uart1InitBuffers(void)
 		bufferInit(&uartTxBuffer[1], (u08*) UART1_TX_BUFFER_ADDR, UART1_TX_BUFFER_SIZE);
 	#endif
 }
+#endif
 
+#ifdef UART_USE_INT
 void uartSetRxHandler(u08 nUart, void (*rx_func)(unsigned char c))
 {
 	// make sure the uart number is within bounds
@@ -124,6 +141,7 @@ void uartSetRxHandler(u08 nUart, void (*rx_func)(unsigned char c))
 		UartRxFunc[nUart] = rx_func;
 	}
 }
+#endif
 
 void uartSetBaudRate(u08 nUart, u32 baudrate)
 {
@@ -145,22 +163,28 @@ void uartSetBaudRate(u08 nUart, u32 baudrate)
 	}
 }
 
+#ifdef UART_USE_INT
 cBuffer* uartGetRxBuffer(u08 nUart)
 {
 	// return rx buffer pointer
 	return &uartRxBuffer[nUart];
 }
+#endif
 
+#ifdef UART_USE_INT
 cBuffer* uartGetTxBuffer(u08 nUart)
 {
 	// return tx buffer pointer
 	return &uartTxBuffer[nUart];
 }
+#endif
 
 void uartSendByte(u08 nUart, u08 txData)
 {
 	// wait for the transmitter to be ready
+	#ifdef UART_USE_INT
 	while(!uartReadyTx[nUart]);
+	#endif
 	// send byte
 	if(nUart)
 	{
@@ -170,11 +194,13 @@ void uartSendByte(u08 nUart, u08 txData)
 	else
 	{
 		while(!(UCSR0A & (1<<UDRE0)));
-		//outb(UDR0, txData);
-		UDR0 = txData;
+		outb(UDR0, txData);
+		// UDR0 = txData;
 	}
+	#ifdef UART_USE_INT
 	// set ready state to FALSE
 	uartReadyTx[nUart] = FALSE;
+	#endif
 }
 
 void uart0SendByte(u08 data)
@@ -212,6 +238,7 @@ int uart1GetByte(void)
 
 u08 uartReceiveByte(u08 nUart, u08* rxData)
 {
+	#ifdef UART_USE_INT
 	// make sure we have a receive buffer
 	if(uartRxBuffer[nUart].size)
 	{
@@ -227,8 +254,18 @@ u08 uartReceiveByte(u08 nUart, u08* rxData)
 	}
 	else
 		return FALSE;				// no buffer
+	#else
+	if(nUart) {
+		*rxData = inb(UDR1);
+	}
+	else {
+		*rxData = inb(UDR0);
+	}
+	return TRUE;
+	#endif
 }
 
+#ifdef UART_USE_INT
 void uartFlushReceiveBuffer(u08 nUart)
 {
 	// flush all data from receive buffer
@@ -378,3 +415,4 @@ UART_INTERRUPT_HANDLER(USART1_RX_vect)
 	// service UART1 receive interrupt
 	uartReceiveService(1);
 }
+#endif

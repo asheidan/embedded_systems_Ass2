@@ -38,7 +38,7 @@ avr.Append(LINKFLAGS='-Wl,--gc-sections,--print-gc-sections')
 net_files	   = [os.path.join('avrlib','net', f) for f in Split('arp.c dhcp.c icmp.c ip.c net.c netstack.c')]
 nic_driver = ['avrlib/net/enc28j60.c']
 general_files   = [os.path.join('avrlib',f) for f in Split('spi.c mmc.c uart2.c rprintf.c buffer.c timer.c debug.c')]
-# # general_files.append('uart2.c')
+general_files += ['avrlib/vt100.c']
 # 
 procyon = avr.Library('procyon', general_files + nic_driver + net_files)
 # avr.DisplaySizes(procyon,TOTALS=True)
@@ -63,8 +63,8 @@ global_header = avr.GenerateFromTemplate('global.h.template')
 Depends(global_header, 'SConstruct')
 
 
-target = avr.Program(Split('main.c lm74.c'),LIBS=['procyon'],LIBPATH=['.'])
-# Depends(target,procyon)
+target = avr.Program(Split('main.c lm74.c mmcfunctions.c'),LIBS=['procyon'],LIBPATH=['.'])
+Depends(target,procyon)
 avr.DisplaySizes('size',target)
 
 hex_file = avr.HexFile(target)

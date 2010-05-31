@@ -47,7 +47,7 @@
 #define ENC28J60_MAC0 '0'
 #define ENC28J60_MAC1 'F'
 #define ENC28J60_MAC2 'F'
-#define ENC28J60_MAC3 'I'
+#define ENC28J60_MAC3 '1'
 #define ENC28J60_MAC4 'C'
 #define ENC28J60_MAC5 'E'
 #endif

@@ -60,7 +60,12 @@ void temperature_timer_interrupt (void)
 	int i;
 	int temperature = read_temperature();
 
+	// Format temperature.
 	format_temperature(buf, temperature);
+	for (i = 0; buf[i] != '.'; i++);
+	if (buf[2] >= '5')
+		buf[1]++;
+	buf[2] = '\0';
 
 	cbi(PORTA, PA0);
 	if (mmc_buf_i != 0 || conf->current_sector != START_SECTOR)

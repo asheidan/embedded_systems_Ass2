@@ -115,9 +115,9 @@ int main (void) {
 	}
 	sbi(MMC_CS_PORT,MMC_CS_PIN);
 
+	rprintfProgStrM("TIMER Init...\r\n");
 	init_temperature_timer();
 
-	for(;;) {
-	}
+	for(;;);
 }
 

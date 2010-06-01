@@ -8,8 +8,8 @@
 
 \title{Customer Terminal}
 \author{
-	Emil Eriksson (\href{mailto:c07een@cs.umu.se}{\texttt{c07een@cs.umu.se}}) \\
-	Rickard Westerlund (\href{mailto:c07rwd@cs.umu.se}{\texttt{c07rwd@cs.umu.se}})
+	Emil Eriksson \\
+	Rickard Westerlund
 }
 \date{\today}
 
@@ -22,10 +22,55 @@
 	\section[Introduction]{Introduction}
 
 	\section[Materials and Methods]{Materials and Methods}
+		\begin{frame}
+			\frametitle{Wiring diagram - Hardware overview}
+			\includegraphics[width=\textwidth]{kopplingsschema.png}
+		\end{frame}
 
 		\subsection[Hardware]{Hardware}
+			\begin{frame}
+				\frametitle{Hardware}
+				\begin{itemize}
+					\item Microcontroller
+					\item Sensor - LM74
+					\item Network - ENC28J60
+				\end{itemize}
+			\end{frame}
+
+			\begin{frame}
+				\frametitle{Microcontroller}
+				ATMega644PA
+
+				picture!!!
+			\end{frame}
+
+			\begin{frame}
+				\frametitle{Sensor}
+				LM74
+
+				picture!!!
+			\end{frame}
+
+			\begin{frame}
+				\frametitle{Network}
+				ENC28J60
+
+				picture!!!
+			\end{frame}
 
 		\subsection[Software]{Software}
+			\begin{frame}
+				\begin{itemize}
+					\item Procyon
+					\item Data download
+					\item Sensor interaction - LM74
+					\item "UI" - USART
+				\end{itemize}
+			\end{frame}
+
+			\begin{frame}
+				\frametitle{Procyon}
+			\end{frame}
 
 	\section[Results]{Results}
 

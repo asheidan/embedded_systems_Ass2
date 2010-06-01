@@ -155,6 +155,8 @@
 			% TODO: Emil
 
 			The ENC28J60 is a stand-alone ethernet controller with SPI-interface. As seen in \autoref{fig:wiring-diagram} (\pagename{} \pageref{fig:wiring-diagram}) the controller is attached to the SPI-bus of the micro controller and has chip select connected to {\tt PORTA}.
+
+			This isn't used in the final product as networking was canceled.
 			
 	\subsection{Software}
 		\subsubsection{Procyon}
@@ -236,7 +238,7 @@
 	\section{Wiring Diagram}\label{wiring-diagram}
 	\begin{figure}[!htp]
         \centering
-        %\includegraphics[width=\textwidth]{kopplingsschema.png}
+        \includegraphics[width=\textwidth]{kopplingsschema.png}
         \caption{Wiring diagram}
         \label{fig:wiring-diagram}
     \end{figure}

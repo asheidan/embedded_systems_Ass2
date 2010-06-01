@@ -219,12 +219,12 @@ download a copy.-->
 <LABEL pos='71,85' direction='2' font='3' color='208000' style='0'>14</LABEL>
 <LABEL pos='71,89' direction='2' font='3' color='208000' style='0'>15</LABEL>
 <WIRE a='151,132' b='151,70'/>
-<WIRE a='89,132' b='151,132'/>
+<WIRE a='120,132' b='151,132'/>
 <TEXT pos='152,68' direction='0' font='4' color='000000'>GND</TEXT>
 <LABEL pos='151,71' direction='1' font='4' color='208000' style='0'>4</LABEL>
 <TEXT pos='159,62' direction='3' font='4' color='000000'>VCC</TEXT>
 <WIRE a='173,47' b='173,61'/>
-<WIRE a='86,47' b='173,47'/>
+<WIRE a='102,47' b='173,47'/>
 <WIRE a='173,61' b='165,61'/>
 <LABEL pos='166,61' direction='3' font='4' color='208000' style='0'>8</LABEL>
 <TEXT pos='117,68' direction='0' font='4' color='000000'>INT</TEXT>
@@ -277,5 +277,15 @@ download a copy.-->
 <WIRE a='200,90' b='200,132'/>
 <JUNCTION pos='200,132'/>
 <WIRE a='194,132' b='200,132'/>
+<WIRE a='120,132' b='120,70'/>
+<WIRE a='89,132' b='120,132'/>
+<JUNCTION pos='120,132'/>
+<LABEL pos='120,71' direction='1' font='3' color='208000' style='0'>9</LABEL>
+<JUNCTION pos='102,47'/>
+<WIRE a='102,47' b='102,60'/>
+<WIRE a='86,47' b='102,47'/>
+<WIRE a='102,60' b='112,60'/>
+<TEXT pos='113,61' direction='3' font='4' color='000000'>VCC</TEXT>
+<LABEL pos='111,60' direction='2' font='3' color='208000' style='0'>10</LABEL>
 </TinyCAD>
 </TinyCADSheets>

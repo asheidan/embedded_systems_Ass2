@@ -1,0 +1,10 @@
+(start)->(Initialize system)->(Initialize card)->(Main loop)
+(Main loop)timer->(Read sensors)->(Store data)->(Main loop)
+(Main loop)uart rx->(Collect user input)-><a>
+<a>->(Display information)-><b>
+<a>->(Send data)-><b>
+<a>->(Format card)-><b>
+<a>->(Renitialize card)-><b>
+<a>->(Display help)-><b>
+<b>->(Main loop)
+

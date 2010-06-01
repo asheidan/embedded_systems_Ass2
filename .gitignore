@@ -1,0 +1,12 @@
+*.o
+*.d
+*.a
+*.pyc
+.*.dblite
+*.aux
+*.log
+*.out
+*.toc
+*.fls
+*.hex
+*.elf

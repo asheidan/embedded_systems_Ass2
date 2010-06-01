@@ -65,6 +65,7 @@
 					\item Data download
 					\item Sensor interaction - LM74
 					\item "UI" - USART
+					\item Interrupts - Timer and USART receive
 				\end{itemize}
 			\end{frame}
 

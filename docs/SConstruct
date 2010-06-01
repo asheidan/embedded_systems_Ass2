@@ -1,0 +1,9 @@
+env = Environment(TOOLS=['pdflatex'])
+env.AppendENVPath('PATH','/opt/local/bin')
+
+target = env.PDF('project2.latex')
+
+view = env.Command('.view',str(target[0]),'osascript -e \'tell application \"Skim\" to revert document \"$SOURCE\"\' || open -a Skim "$SOURCE"; touch .view')
+#Depends(view,target)
+Default(view)
+

@@ -178,24 +178,6 @@
 			Procyon is a library written for Atmel's AVR Processors. This looked very promising in the beginning of the project, but as will be clear later on in this section, much of the troubles could have been avoided by using a different library or writing some of the functionality implemented in Procyon from scratch.
 
 			% TODO: Move this paragraph to introduction? Or summary?
-			Since this report isn't an evaluation of the Procyon library the shortcomings of this software won't be discussed in depth but just mentioned in passing.
-
-			\begin{itemize}
-				\item There is no list available over which processors are supported.
-
-				\item The latest version found is from late 2006 (29th October).\\
-				This in itself isn't a problem but should have served as a warning. The project seems to be abandoned by it's author and no one seems to have picked up the torch and updated the source since then.
-
-				\item The documentation of the library consists of comments in the headers.\\
-				In some cases these are great and makes the modules a breeze to use and interact with. In other, more common cases, all that is available are the names and parameters of the functions. No overall view is available over used interrupts, global values or buffers. This makes the library, consisting of around 21 000 lines of code (not including headers or examples) not very developer-friendly.
-
-				\item Some of the implementations doesn't compile.\\
-				This is because they rely on registers not available. 
-			\end{itemize}
-
-			All in all probably around half the time of the project has been used by various problems related to the use, compilation or implementation of this library.
-
-			Procyon shouldn't be viewed as a library, ready for use. But rather as a great collection of examples of how to interact with different external devices. If that had been clear from the beginning of the project much time could have been used in areas which the final product would have profited from.
 
 			The modules finally used in the final product was functionality for USART, SPI, MMC.
 
@@ -239,17 +221,45 @@
 		As with many projects the final product in this case has a set of limitations. These will be mentioned here and some will be discussed in depth.
 
 		\subsubsection{Network}
+
+			There is no form of network support. Why is discussed in \autoref{hw:enc28j60} and \autoref{sw:procyon}.
+
 		\subsubsection[Transfer speed]{Downloading large amounts of data at low transfer speed}
 			
 			The transfer of the collected data is currently done at a speed of 56kB/sek (57600baud). If the supplied 256MB memory card is filled with data it would take more than an hour to download the data. This isn't deemed as a big problem as the unit would need more than a year to acquire that much data (1Hz sampling from one sensor).
 			
 		\subsubsection[Card information]{Card information not updated when a new card is reinitialized}
+			
+			When the system boots the card size is read from the CSD-field of the card. This information is only read on boot and not when a card is reinitialized (remounted). The lines extracting this information should be moved to the card initialization before this software is used in a production environment.
 
-\section{Evaluation}
+\section{Discussion}
 
 		The use of a non-standard build environment led to some strange problems. The version of {\tt gcc} used did report an error if the target processor wasn't given as argument when compiling the object-files. But no error or warning was shown when this flag was forgotten in the linking-stage.
+
 		This led to some very strange bugs which in the end was contributed to sections overwriting each other and therefore led to the processor restarting when overwritten functions were called.
+
 		In the end this was found and the flag was added to the linking stage.
+		\\
+
+		Procyon nearly demands a section on just the library.
+		Since this report isn't an evaluation of the Procyon library the shortcomings of this software won't be discussed in depth but just mentioned in passing.
+
+		\begin{itemize}
+			\item There is no list available over which processors are supported.
+
+			\item The latest version found is from late 2006 (29th October).\\
+			This in itself isn't a problem but should have served as a warning. The project seems to be abandoned by it's author and no one seems to have picked up the torch and updated the source since then.
+
+			\item The documentation of the library consists of comments in the headers.\\
+			In some cases these are great and makes the modules a breeze to use and interact with. In other, more common cases, all that is available are the names and parameters of the functions. No overall view is available over used interrupts, global values or buffers. This makes the library, consisting of around 21 000 lines of code (not including headers or examples) not very developer-friendly.
+
+			\item Some of the implementations doesn't compile.\\
+			This is because they rely on registers not available. 
+		\end{itemize}
+
+		All in all probably around half the time of the project has been used by various problems related to the use, compilation or implementation of this library.
+
+		Procyon shouldn't be viewed as a library, ready for use. But rather as a great collection of examples of how to interact with different external devices. If that had been clear from the beginning of the project much time could have been used in areas which the final product would have profited from.
 
 %referenslista
 %  \bibliographystyle{plain}

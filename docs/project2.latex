@@ -16,7 +16,7 @@
 %\makeindex
 % Don't forget to run makeindex and include \printindex
 \usepackage{fancyhdr}
- \usepackage[colorlinks=true,linkcolor=black,urlcolor=black]{hyperref} % Reference by title
+ \usepackage[colorlinks=true,linkcolor=magenta,urlcolor=blue]{hyperref} % Reference by title
 
 \setcounter{tocdepth}{2} % Only subsections in toc
 
@@ -95,10 +95,10 @@
 %--- Abstract -----------------------------------------------------------------
 \section*{Summary}
 	
-	This report describes an implmentation of a data collection unit that stores
-	temperatures read in intervals of one second and stored on an MMC. This data
-	was planned to downloadable over LAN but due to problems getting it to work
-	transmitting it using RS232 was done instead.
+	This report describes an implementation of a data collection unit that
+	stores information from sensors read in intervals of one second and stored
+	on a Memory Card. This data was planned to be downloadable via Ethernet but
+	due to problems getting the support library to work, RS232 was used instead.
 
 \clearpage
 %--- Table of contents --------------------------------------------------------
@@ -110,11 +110,12 @@
 \pagenumbering{arabic}
 
 \section{Introduction}
-	This project aims to create a data collection unit that continously collects
-	data from a set of sensor at regular intervals that is stored on an MMC that
-	can be downloaded from over a LAN connection.
+	This project aimed to create a data collection unit that continuously
+	collects data from a set of sensors at regular intervals. This data is
+	stored on a Memory Card and can be downloaded over an Ethernet connection.
 
-	The device should be designed so it will be easy to expand with more sensors.
+	The device should be designed so it will be easy to extend with more
+	sensors.
 
 \section{Materials and Methods}
 	\subsection{Build environment}
@@ -130,17 +131,18 @@
 			Is avaliable for download from the homepage on \url{http://savannah.nongnu.org/projects/avrdude}.
 			
 			\item[SCons] ~\\
-			A tool, much like Make, but intelligent, implemented in python (more information on \url{http://www.scons.org/}). The big difference between Make and SCons is the automatic parsing of source-files to keep check of dependencies.
+			A tool, much like Make, but intelligent, implemented in python. The big difference between Make and SCons is the automatic parsing of source-files to keep check of dependencies.
+			More information about SCons is available on \url{http://www.scons.org/}.
 		\end{description}
 
-		As SCons doesn't have support for cross-compiling as standard, a small tool-library was written for AVR and Avrdude. This tool-library is available as part of the source.
+		As SCons doesn't have support for cross-compilation as standard, a small tool-library was written for AVR and Avrdude. This tool-library is available as part of the source.
 
 	\subsection{Hardware}
-		The hardware components consists of an ATMega644PA microcontroller, chosen primarily to deal with the high memory demands of MMC reading as well as the Ethernet controller. An LM74 is used to get temperature readings. For LAN an ENC28J60 is used which has a simple pin layout and is supported by \nameref{sw:procyon}.
+		The hardware components consists of an ATMega644PA microcontroller, chosen primarily to deal with the high memory demands of MMC reading/writing as well as the Ethernet controller. An LM74 was used as a sensor to get temperature readings. For Ethernet an ENC28J60 was used which has a simple pin layout and is supported by \nameref{sw:procyon}.
 
 		\subsubsection{Microcontroller}
 
-			The microcontroller used is Atmel's ATMega644PA which is a replacement for the older ATMega644.
+			The microcontroller used was Atmel's ATMega644PA which is a replacement for the older ATMega644.
 			
 			As interacting with the flash memory card requires a buffer at least the same size as a sector (normally 512 bytes) and using several buffers makes reading and writing from the card much easier it was decided to use a controller with enough RAM for 2 sector buffers and memory over for the network stack in \nameref{sw:procyon}.
 			The ATMega644PA met these requirements and was therefore chosen.
@@ -152,39 +154,46 @@
 
 		\subsubsection{Memory card}
 
-			Memory cards are read using a simple card holder that is connected to the SPI bus on {\tt PORTB} of the micrcontroller and receives cable select from {\tt PORTA}\ref{fig:wiring-diagram}. These cards have an SPI-interface by themselves.
+			Memory cards are read using a simple card holder that is connected to the SPI bus on {\tt PORTB} of the micrcontroller and receives cable select from {\tt PORTA}. See \autoref{fig:wiring-diagram}. These cards have an SPI-interface by themselves.
 
 		\subsubsection{LM74}
 
-			LM74 is a temperature sensor using an SPI-interface to transmit temperature readings formatted as a 16-bit fixed-point number along with control codes. This sensor is used to collect and store data from continously.
+			LM74 is a temperature sensor using the SPI-interface to transmit temperature readings formatted as a 12-bit fixed-point number along with control codes. This sensor is used to collect and store data from continously.
 
-			The sensor is connected on the {\tt PORTB} SPI bus of the microcontroller and gets its cable select signal from {\tt PORTA} as well\ref{fig:wiring-diagram}.
+			The sensor is connected on the {\tt PORTB} SPI bus of the microcontroller and gets its cable select signal from {\tt PORTA} as well. See \autoref{fig:wiring-diagram}.
 
 		\subsubsection{ENC28J60}
 			\label{hw:enc28j60}
 
-			The ENC28J60 is a stand-alone ethernet controller with SPI-interface. As seen in \autoref{fig:wiring-diagram} (\pagename{} \pageref{fig:wiring-diagram}) the controller is attached to the SPI-bus of the microcontroller and has chip select connected to {\tt PORTA}.
+			The ENC28J60 is a stand-alone Ethernet controller with SPI-interface. As seen in \autoref{fig:wiring-diagram} (\pagename{} \pageref{fig:wiring-diagram}) the controller is attached to the SPI-bus of the microcontroller and has chip select connected to {\tt PORTA}.
 
 			This isn't used in the final product as networking was canceled.
 			
 	\subsection{Software}
-		The software relies heavily on interrupts and only does initialization before
-		putting the main program in a loop where it does nothing else. The interrupts
-		are described more in detail below.
+		The software relies heavily on interrupts and only does initialization
+		before putting the main program in a loop where it does nothing else.
+		This makes it possible to extend the software with an idle mode which
+		could cut power consumption. The interrupts are described more in detail
+		below.
+
 
 		\subsubsection{Procyon}
 			\label{sw:procyon}
 
-			Procyon is a library written for Atmel's AVR Processors. This looked very promising in the beginning of the project, but as will be clear later on in this section, much of the troubles could have been avoided by using a different library or writing some of the functionality implemented in Procyon from scratch.
+			Procyon is a library written for Atmel's AVR Processors. This looked
+			very promising in the beginning of the project, but as will be
+			discussed in \autoref{sec:discussion}, much of the troubles could have
+			been avoided by using a different library or writing some of the
+			functionality implemented in Procyon from scratch.
 
-			% TODO: Move this paragraph to introduction? Or summary?
+			The modules finally used in the final product was functionality for USART, SPI and MMC.
 
-			The modules finally used in the final product was functionality for USART, SPI, MMC.
+			More information about Procyon on the homepage. \url{http://hubbard.engr.scu.edu/embedded/avr/avrlib/}
 
 		\subsubsection{Data download}
 			
 			From the beginning the intention was to implement networking via the ENC28J60-driver and network stack implemented by \nameref{sw:procyon} and allow the user to download the collected data that way.
-			But as time ran out due to the problems discussed in \autoref{sw:procyon}, this support was replaced by a serial interface via the Usart.
+			But as time ran out due to the problems discussed in \autoref{sec:discussion}, this support was replaced by a serial interface via the USART.
 
 			When the user downloads data, each sector is read from the MMC-card and then sent via the USART. When the last used sector is sent the software goes back to collecting data from the sensors.
 

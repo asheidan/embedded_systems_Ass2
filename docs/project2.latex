@@ -111,7 +111,28 @@
 
 \section{Materials and Methods}
 	\subsection{Build environment}
-		\nameref{sw:procyon}
+
+		When it was decided to use \nameref{sw:procyon}, maintaining the steps to build the software in WinAVR became more and more complicated.
+		In an effort to keep using the library without the hassle of maintaining \nameref{sw:procyon}, a switch to a more open buildsystem was made.
+		\begin{description}
+			\item[AVR tool-chain] ~\\
+			This is the same tool-chain ({\tt gcc}, {\tt ld} and so on) used for compilation by WinAVR but instead compiled on, in this case, Mac OS X.
+
+			\item[Avrdude] ~\\
+			An open source programmer for the AVR processors.
+			Is avaliable for download from the homepage on \url{http://savannah.nongnu.org/projects/avrdude}.
+			
+			\item[SCons] ~\\
+			A tool, much like Make, but intelligent, implemented in python (more information on \url{http://www.scons.org/}). The big difference between Make and SCons is the automatic parsing of source-files to keep check of dependencies.
+		\end{description}
+
+		As SCons doesn't have support for cross-compiling as standard, a small tool-library was written for AVR and Avrdude. This tool-library is available as part of the source.
+
+		% TODO: det här ska nog till diskussion
+		The use of a non-standard build environment led to some strange problems. The version of {\tt gcc} used did report an error if the target processor wasn't given as argument when compiling the object-files. But no error or warning was shown when this flag was forgotten in the linking-stage.
+		This led to some very strange bugs which in the end was contributed to sections overwriting each other and therefore led to the processor restarting when overwritten functions were called.
+		In the end this was found and the flag was added to the linking stage.
+
 	\subsection{Hardware}
 		\subsubsection{Microcontroller}
 		\subsubsection{Memory card}
@@ -122,11 +143,7 @@
 			\label{hw:enc28j60}
 			% TODO: Emil
 
-			The ENC28J60 is a stand-alone ethernet controller with SPI-interface. As seen in 
-			% TODO
-			the controller is attached to the SPI-bus of the micro controller and has chip selected to {\tt PORTA}.
-			
-			From the beginning the intention was to implement networking via the driver implemented by \nameref{sw:procyon}. But as time ran out due to the problems discussed in \autoref{sw:procyon}, this support was replaced by a serial interface via usart.
+			The ENC28J60 is a stand-alone ethernet controller with SPI-interface. As seen in \autoref{fig:wiring-diagram} (\pagename{} \pageref{fig:wiring-diagram}) the controller is attached to the SPI-bus of the micro controller and has chip select connected to {\tt PORTA}.
 			
 	\subsection{Software}
 		\subsubsection{Procyon}
@@ -135,7 +152,7 @@
 
 			Procyon is a library written for Atmel's AVR Processors. This looked very promising in the beginning of the project, but as will be clear later on in this section, much of the troubles could have been avoided by using a different library or writing some of the functionality implemented in Procyon from scratch.
 
-			% TODO: Move this paragraph to introduction?
+			% TODO: Move this paragraph to introduction? Or summary?
 			Since this report isn't an evaluation of the Procyon library the shortcomings of this software won't be discussed in depth but just mentioned in passing.
 
 			\begin{itemize}
@@ -154,17 +171,29 @@
 			All in all probably around half the time of the project has been used by various problems related to the use, compilation or implementation of this library.
 
 			Procyon shouldn't be viewed as a library, ready for use. But rather as a great collection of examples of how to interact with different external devices. If that had been clear from the beginning of the project much time could have been used in areas which the final product would have profited from.
-		\subsubsection{Networking}
 
-			\nameref{sw:procyon} implements the driver for the controller \nameref{hw:enc28j60}.
+			The modules finally used in the final product was functionality for Usart, SPI, MMC.
+			% TODO: Har jag glömt någon del?
+
+		\subsubsection{Data download}
+			
+			From the beginning the intention was to implement networking via the ENC28J60-driver and network stack implemented by \nameref{sw:procyon} and allow the user to download the collected data that way.
+			But as time ran out due to the problems discussed in \autoref{sw:procyon}, this support was replaced by a serial interface via the Usart.
+
+			When the user downloads data, each sector is read from the MMC-card and then sent via the USART. When the last used sector is sent the software goes back to collecting data from the sensors.
 
 		\subsubsection{Memory card}
 		\subsubsection{LM74}
+
 			To get readings from the LM74 sensor, 16-bit integers are read until a valid temperature representation is given. This is needed as the LM74 sends control information when it is woken up. The temperature is afterwards formatted in a readable way, and also rounded up to the first decimal.
+
+		\subsubsection{Usart}
 
 \section{Results}
 	% TODO: Emil
 
+\section{Limitations}
+	- Downloading large files
 \section{Discussion}
 
 %referenslista
@@ -174,6 +203,7 @@
     %%%%%%%%%%%%%%%% bilagor %%%%%%%%%%%%%%%%
     \clearpage
     \appendix
+	 % TODO: Emil exporterar kopplingsdiagram
 	\section{Wiring Diagram}\label{wiring-diagram}
 	\begin{figure}[!htp]
         \centering

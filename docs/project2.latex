@@ -114,6 +114,8 @@
 	data from a set of sensor at regular intervals that is stored on an MMC that
 	can be downloaded from over a LAN connection.
 
+	The device should be designed so it will be easy to expand with more sensors.
+
 \section{Materials and Methods}
 	\subsection{Build environment}
 
@@ -139,10 +141,12 @@
 		In the end this was found and the flag was added to the linking stage.
 
 	\subsection{Hardware}
+		The hardware components consists of an ATMega644PA microcontroller, chosen primarily to deal with the high memory demands of MMC reading as well as the Ethernet controller. An LM74 is used to get temperature readings. For LAN an ENC28J60 is used which has a simple pin layout and is supported by \nameref{sw:procyon}.
+
 		\subsubsection{Microcontroller}
 		\subsubsection{Memory card}
 
-			Memory cards are read using a simple card holder that is connected to the SPI bus on {\tt PORTB} of the micrcontroller and receives cable select from {\tt PORTA}\ref{fig:wiring-diagram}.
+			Memory cards are read using a simple card holder that is connected to the SPI bus on {\tt PORTB} of the micrcontroller and receives cable select from {\tt PORTA}\ref{fig:wiring-diagram}. These cards have an SPI-interface by themselves.
 
 		\subsubsection{LM74}
 
@@ -150,13 +154,17 @@
 
 			The sensor is connected on the {\tt PORTB} SPI bus of the microcontroller and gets its cable select signal from {\tt PORTA} as well\ref{fig:wiring-diagram}.
 
-		\subsubsection{ENJ28J60}
+		\subsubsection{ENC28J60}
 			\label{hw:enc28j60}
 			% TODO: Emil
 
 			The ENC28J60 is a stand-alone ethernet controller with SPI-interface. As seen in \autoref{fig:wiring-diagram} (\pagename{} \pageref{fig:wiring-diagram}) the controller is attached to the SPI-bus of the micro controller and has chip select connected to {\tt PORTA}.
 			
 	\subsection{Software}
+		The software relies heavily on interrupts and only does initialization before
+		putting the main program in a loop where it does nothing else. The interrupts
+		are described more in detail below.
+
 		\subsubsection{Procyon}
 			\label{sw:procyon}
 			% TODO: Emil
@@ -202,7 +210,9 @@
 
 		\subsubsection{LM74}
 
-			To get readings from the LM74 sensor, 16-bit integers are read until a valid temperature representation is given. This is needed as the LM74 sends control information when it is woken up. The temperature is afterwards formatted in a readable way, and also rounded up to the first decimal.
+			To get readings from the LM74 sensor, 16-bit integers are read until a valid temperature representation is given. This is needed as the LM74 sends control information when it is woken up. The temperature is afterwards formatted in a readable way, and also rounded to the first decimal.
+
+			Each of these readings are done using a timer interrupt set to one second.
 
 		\subsubsection{USART}
 
@@ -214,6 +224,7 @@
 				\item[{\tt m}] Reinitializes a card, used when changing cards.
 				\item[{\tt h}] Displays a help text describing all commands. Also sent when an unrecognized character is received.
 			\end{description}
+			This is handled in the USART receive interrupt.
 
 \section{Results}
 	% TODO: Emil

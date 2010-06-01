@@ -1,6 +1,6 @@
 \documentclass[a4paper,twoside,titlepage]{article}
 
-%--- Packages ----------------------------------------------------------------
+%--- Packages -----------------------------------------------------------------
 \usepackage{a4}
 \usepackage[english]{babel}
 
@@ -20,7 +20,7 @@
 
 \setcounter{tocdepth}{2} % Only subsections in toc
 
-%--- Definitions -------------------------------------------------------------
+%--- Definitions --------------------------------------------------------------
 
 \def\author			{}
 \def\course			{5EL011 VT10}
@@ -63,10 +63,10 @@
 	\renewcommand{\headrulewidth}{0.4pt} 
 	\renewcommand{\footrulewidth}{0.4pt}
 
-%-----------------------------------------------------------------------------
+%------------------------------------------------------------------------------
 \begin{document}
 \pagestyle{empty}
-%--- Titlepage ---------------------------------------------------------------
+%--- Titlepage ----------------------------------------------------------------
 \begin{titlepage}
 	{
 	\helvetica
@@ -92,31 +92,69 @@
 
 \pagestyle{fancy}
 \pagenumbering{roman}
-%--- Abstract ----------------------------------------------------------------
+%--- Abstract -----------------------------------------------------------------
 \section*{Summary}
 	% TODO !!!
-%--- Table of contents -------------------------------------------------------
+\clearpage
+%--- Table of contents --------------------------------------------------------
 \tableofcontents
 \clearpage
 \newpage
 
-%--- Document ----------------------------------------------------------------
+%--- Document -----------------------------------------------------------------
 \pagenumbering{arabic}
 
 \section{Introduction}
 			% TODO: Rickard
 
 \section{Materials and Methods}
+	\subsection{Build environment}
+		\nameref{sw:procyon}
 	\subsection{Hardware}
 		\subsubsection{Microcontroller}
 		\subsubsection{Memory card}
 		\subsubsection{LM74}
 			% TODO: Rickard
 		\subsubsection{ENJ28J60}
+			\label{hw:enc28j60}
 			% TODO: Emil
+
+			The ENC28J60 is a stand-alone ethernet controller with SPI-interface. As seen in 
+			% TODO
+			the controller is attached to the SPI-bus of the micro controller and has chip selected to {\tt PORTA}.
+			
+			From the beginning the intention was to implement networking via the driver implemented by \nameref{sw:procyon}. But as time ran out due to the problems discussed in \autoref{sw:procyon}, this support was replaced by a serial interface via usart.
+			
 	\subsection{Software}
 		\subsubsection{Procyon}
+			\label{sw:procyon}
 			% TODO: Emil
+
+			Procyon is a library written for Atmel's AVR Processors. This looked very promising in the beginning of the project, but as will be clear later on in this section, much of the troubles could have been avoided by using a different library or writing some of the functionality implemented in Procyon from scratch.
+
+			% TODO: Move this paragraph to introduction?
+			Since this report isn't an evaluation of the Procyon library the shortcomings of this software won't be discussed in depth but just mentioned in passing.
+
+			\begin{itemize}
+				\item There is no list available over which processors are supported.
+
+				\item The latest version found is from late 2006 (29th October).\\
+				This in itself isn't a problem but should have served as a warning. The project seems to be abandoned by it's author and no one seems to have picked up the torch and updated the source since then.
+
+				\item The documentation of the library consists of comments in the headers.\\
+				In some cases these are great and makes the modules a breeze to use and interact with. In other, more common cases, all that is available are the names and parameters of the functions. No overall view is available over used interrupts, global values or buffers. This makes the library, consisting of around 21 000 lines of code (not including headers or examples) not very developer-friendly.
+
+				\item Some of the implementations doesn't compile.\\
+				This is because they rely on registers not available. 
+			\end{itemize}
+
+			All in all probably around half the time of the project has been used by various problems related to the use, compilation or implementation of this library.
+
+			Procyon shouldn't be viewed as a library, ready for use. But rather as a great collection of examples of how to interact with different external devices. If that had been clear from the beginning of the project much time could have been used in areas which the final product would have profited from.
+		\subsubsection{Networking}
+
+			\nameref{sw:procyon} implements the driver for the controller \nameref{hw:enc28j60}.
+
 		\subsubsection{Memory card}
 		\subsubsection{LM74}
 			% TODO: Rickard

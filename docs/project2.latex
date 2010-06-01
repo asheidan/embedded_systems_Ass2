@@ -105,7 +105,9 @@
 \pagenumbering{arabic}
 
 \section{Introduction}
-			% TODO: Rickard
+	This project aims to create a data collection unit that continously collects
+	data from a set of sensor at regular intervals that is stored on an MMC that
+	can be downloaded from over a LAN connection.
 
 \section{Materials and Methods}
 	\subsection{Build environment}
@@ -114,7 +116,8 @@
 		\subsubsection{Microcontroller}
 		\subsubsection{Memory card}
 		\subsubsection{LM74}
-			% TODO: Rickard
+			LM74 is a temperature sensor using an SPI-interface to transmit temperature readings formatted as a 16-bit fixed-point number along with control codes. This sensor is used to collect and store data from continously.
+
 		\subsubsection{ENJ28J60}
 			\label{hw:enc28j60}
 			% TODO: Emil
@@ -157,7 +160,7 @@
 
 		\subsubsection{Memory card}
 		\subsubsection{LM74}
-			% TODO: Rickard
+			To get readings from the LM74 sensor, 16-bit integers are read until a valid temperature representation is given. This is needed as the LM74 sends control information when it is woken up. The temperature is afterwards formatted in a readable way, and also rounded up to the first decimal.
 
 \section{Results}
 	% TODO: Emil

@@ -119,7 +119,7 @@
 \section{Materials and Methods}
 	\subsection{Build environment}
 
-		When it was decided to use \nameref{sw:procyon}, maintaining the steps to build the software in WinAVR became more and more complicated.
+		As more and more code from \nameref{sw:procyon} was used, maintaining the steps to build the software in WinAVR became more and more complicated.
 		In an effort to keep using the library without the hassle of maintaining \nameref{sw:procyon}, a switch to a more open buildsystem was made.
 		\begin{description}
 			\item[AVR tool-chain] ~\\
@@ -135,15 +135,22 @@
 
 		As SCons doesn't have support for cross-compiling as standard, a small tool-library was written for AVR and Avrdude. This tool-library is available as part of the source.
 
-		% TODO: det här ska nog till diskussion
-		The use of a non-standard build environment led to some strange problems. The version of {\tt gcc} used did report an error if the target processor wasn't given as argument when compiling the object-files. But no error or warning was shown when this flag was forgotten in the linking-stage.
-		This led to some very strange bugs which in the end was contributed to sections overwriting each other and therefore led to the processor restarting when overwritten functions were called.
-		In the end this was found and the flag was added to the linking stage.
-
 	\subsection{Hardware}
 		The hardware components consists of an ATMega644PA microcontroller, chosen primarily to deal with the high memory demands of MMC reading as well as the Ethernet controller. An LM74 is used to get temperature readings. For LAN an ENC28J60 is used which has a simple pin layout and is supported by \nameref{sw:procyon}.
 
 		\subsubsection{Microcontroller}
+
+			The microcontroller used is Atmel's ATMega644PA which is a replacement for the older ATMega644.
+			
+			As interacting with the flash memory card requires a buffer at least the same size as a sector (normally 512 bytes) and using several buffers makes reading and writing from the card much easier it was decided to use a controller with enough RAM for 2 sector buffers and memory over for the network stack in \nameref{sw:procyon}.
+			The ATMega644PA met these requirements and was therefore chosen.
+
+			As computational power wasn't an issue in this application the default clockspeed of 8MHz was used.
+
+			Specification and more technical information about the controller are available from Atmel's homepage.\\
+			\url{http://www.atmel.com/dyn/products/product\_card\_v2.asp?PN=ATmega644PA}
+
+
 		\subsubsection{Memory card}
 
 			Memory cards are read using a simple card holder that is connected to the SPI bus on {\tt PORTB} of the micrcontroller and receives cable select from {\tt PORTA}\ref{fig:wiring-diagram}. These cards have an SPI-interface by themselves.
@@ -158,7 +165,9 @@
 			\label{hw:enc28j60}
 			% TODO: Emil
 
-			The ENC28J60 is a stand-alone ethernet controller with SPI-interface. As seen in \autoref{fig:wiring-diagram} (\pagename{} \pageref{fig:wiring-diagram}) the controller is attached to the SPI-bus of the micro controller and has chip select connected to {\tt PORTA}.
+			The ENC28J60 is a stand-alone ethernet controller with SPI-interface. As seen in \autoref{fig:wiring-diagram} (\pagename{} \pageref{fig:wiring-diagram}) the controller is attached to the SPI-bus of the microcontroller and has chip select connected to {\tt PORTA}.
+
+			This isn't used in the final product as networking was canceled.
 			
 	\subsection{Software}
 		The software relies heavily on interrupts and only does initialization before
@@ -191,7 +200,7 @@
 
 			Procyon shouldn't be viewed as a library, ready for use. But rather as a great collection of examples of how to interact with different external devices. If that had been clear from the beginning of the project much time could have been used in areas which the final product would have profited from.
 
-			The modules finally used in the final product was functionality for Usart, SPI, MMC.
+			The modules finally used in the final product was functionality for USART, SPI, MMC.
 			% TODO: Har jag glömt någon del?
 
 		\subsubsection{Data download}
@@ -210,16 +219,15 @@
 
 		\subsubsection{LM74}
 
-			To get readings from the LM74 sensor, 16-bit integers are read until a valid temperature representation is given. This is needed as the LM74 sends control information when it is woken up. The temperature is afterwards formatted in a readable way, and also rounded to the first decimal.
-
+			To get readings from the LM74 sensor, 16-bit words are read from SPI until a valid temperature representation is given. This is needed as the LM74 sends control information when it is woken up. The temperature is afterwards formatted in a readable way, and also rounded to the first decimal.
 			Each of these readings are done using a timer interrupt set to one second.
 
 		\subsubsection{USART}
 
 			Communication over USART is done by sending a single-byte command described as follows and then data is sent back from the microcontroller.
 			\begin{description}
-				\item[{\tt i}] Displays information about the card, such as verion number, current end sector, total amount of sectors and the size of a sector.
-				\item[{\tt d}] Downloads all the data from the data sectors.
+				\item[{\tt i}] Displays information about the system, such as version number of the software, current end sector, total amount of sectors and the size of a sector on the card.
+				\item[{\tt d}] Downloads all saved data.
 				\item[{\tt r}] Formats the card.
 				\item[{\tt m}] Reinitializes a card, used when changing cards.
 				\item[{\tt h}] Displays a help text describing all commands. Also sent when an unrecognized character is received.
@@ -230,14 +238,18 @@
 	% TODO: Emil
 
 \section{Limitations}
-	\begin{description}
-		\item[Downloading large files] Large data can take a long time to download
-			using USART as the content is send byte by byte.
-		\item[Card information not updated] The information is only gathered at the
-			beginning of the program in the microcontroller.
-	\end{description}
+	As with many projects the final product in this case has a set of limitations. These will be mentioned here and some will be discussed in depth.
 
+	\subsection[Transfer speed]{Downloading large amounts of data at low transfer speed}
+		
+		The transfer of the collected data is currently done at a speed of 56kB/sek (57600baud). If the supplied 256MB memory card is filled with data it would take more than an hour to download the data. This isn't deemed as a big problem as the unit would need more than a year to acquire that much data (1Hz sampling from one sensor).
+		
+	\subsection{Card information not updated}
 \section{Discussion}
+
+		The use of a non-standard build environment led to some strange problems. The version of {\tt gcc} used did report an error if the target processor wasn't given as argument when compiling the object-files. But no error or warning was shown when this flag was forgotten in the linking-stage.
+		This led to some very strange bugs which in the end was contributed to sections overwriting each other and therefore led to the processor restarting when overwritten functions were called.
+		In the end this was found and the flag was added to the linking stage.
 
 %referenslista
 %  \bibliographystyle{plain}
@@ -247,18 +259,17 @@
     \clearpage
     \appendix
 	 % TODO: Emil exporterar kopplingsdiagram
-	\section{Wiring Diagram}\label{wiring-diagram}
+	\section{Figures}
 	\begin{figure}[!htp]
         \centering
-        %\includegraphics[width=\textwidth]{kopplingsschema.png}
+        \includegraphics[width=\textwidth]{kopplingsschema.png}
         \caption{Wiring diagram}
         \label{fig:wiring-diagram}
     \end{figure}
 
-	\section{Activity Diagram}\label{activity-diagram}
 	\begin{figure}[!htp]
         \centering
-        %\includegraphics[width=\textwidth]{aktivitetsdiagram.png}
+        \includegraphics[width=\textwidth]{aktivitetsdiagram.png}
         \caption{Activity diagram showing how the program operates.}
         \label{fig:activity-diagram}
     \end{figure}

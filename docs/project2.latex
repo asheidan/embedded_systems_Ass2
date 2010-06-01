@@ -182,7 +182,7 @@
 
 			Procyon is a library written for Atmel's AVR Processors. This looked
 			very promising in the beginning of the project, but as will be
-			discussed in \autoref{sec:discussion}, much of the troubles could have
+			discussed in \nameref{sec:discussion}, much of the troubles could have
 			been avoided by using a different library or writing some of the
 			functionality implemented in Procyon from scratch.
 
@@ -193,7 +193,7 @@
 		\subsubsection{Data download}
 			
 			From the beginning the intention was to implement networking via the ENC28J60-driver and network stack implemented by \nameref{sw:procyon} and allow the user to download the collected data that way.
-			But as time ran out due to the problems discussed in \autoref{sec:discussion}, this support was replaced by a serial interface via the USART.
+			But as time ran out due to the problems discussed in \nameref{sec:discussion}, this support was replaced by a serial interface via the USART.
 
 			When the user downloads data, each sector is read from the MMC-card and then sent via the USART. When the last used sector is sent the software goes back to collecting data from the sensors.
 
@@ -242,6 +242,7 @@
 			When the system boots the card size is read from the CSD-field of the card. This information is only read on boot and not when a card is reinitialized (remounted). The lines extracting this information should be moved to the card initialization before this software is used in a production environment.
 
 \section{Discussion}
+	\label{sec:discussion}
 
 		The use of a non-standard build environment led to some strange problems. The version of {\tt gcc} used did report an error if the target processor wasn't given as argument when compiling the object-files. But no error or warning was shown when this flag was forgotten in the linking-stage.
 

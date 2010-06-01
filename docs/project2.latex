@@ -211,7 +211,7 @@
 			Memory card are read using the routines from the \nameref{sw:procyon} library.
 			The cards have their own format with a configuration sector at the beginning of the card and following sectors store data. In the configuration sector the version number for the software as well as the last sector with data is stored along with a checksum. A card will be reformatted if this checksum doesn't match, the version number is different from the current or if the card is filled.
 
-			Data is stored as plain text with a newline separating readings. Different readings are separated with the tab character.
+			Data is stored as plain text with a newline separating a set of readings taken at different times. Each set has it's readings from different sensors separated with the tab character.
 
 		\subsubsection{LM74}
 

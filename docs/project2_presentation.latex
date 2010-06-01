@@ -1,0 +1,40 @@
+\documentclass{beamer}
+\usepackage[T1]{fontenc}
+\usepackage[swedish]{babel}
+\usepackage{amssymb, graphicx}
+\usepackage{rotating}
+\usepackage{beamerthemesplit}
+\usepackage{hyperref}
+
+\title{Customer Terminal}
+\author{
+	Emil Eriksson (\href{mailto:c07een@cs.umu.se}{\texttt{c07een@cs.umu.se}}) \\
+	Rickard Westerlund (\href{mailto:c07rwd@cs.umu.se}{\texttt{c07rwd@cs.umu.se}})
+}
+\date{\today}
+
+\begin{document}
+
+	\frame{\titlepage}
+
+	\frame{\tableofcontents}
+
+	\section[Introduction]{Introduction}
+
+	\section[Materials and Methods]{Materials and Methods}
+
+		\subsection[Hardware]{Hardware}
+
+		\subsection[Software]{Software}
+
+	\section[Results]{Results}
+
+	\section[Discussion]{Discussion}
+	
+	\section{Questions}
+		\begin{frame}
+			\begin{center}
+			Questions?
+			\end{center}
+		\end{frame}
+\end{document}

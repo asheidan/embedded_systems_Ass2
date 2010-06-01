@@ -28,8 +28,27 @@
 		\subsection[Software]{Software}
 
 	\section[Results]{Results}
+		\begin{frame}
+			\begin{itemize}
+				\item Network support dropped.
+				\item Slow transfer speeds.
+				\item Card information not updated when cards are switched.
+			\end{itemize}
+		\end{frame}
 
 	\section[Discussion]{Discussion}
+		\begin{frame}
+			\begin{itemize}
+				\item Troublesome build environment.
+				\item Procyon library
+				\begin{itemize}
+					\item No list over supported processors.
+					\item Old library from 2006.
+					\item Poor documentation.
+					\item Some examples don't compile.
+				\end{itemize}
+			\end{itemize}
+		\end{frame}
 	
 	\section{Questions}
 		\begin{frame}

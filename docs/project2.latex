@@ -195,7 +195,7 @@
 
 		\subsubsection{Memory card}
 
-			Memory card are read using the routines from the Procyon library.
+			Memory card are read using the routines from the \nameref{sw:procyon} library.
 			The cards have their own format with a configuration sector at the beginning of the card and following sectors store data. In the configuration sector the version number for the software as well as the last sector with data is stored along with a checksum. A card will be reformatted if this checksum doesn't match, the version number is different from the current or if the card is filled.
 
 			Data is stored as plain text with a newline separating readings. Different readings are separated with the tab character.
@@ -220,9 +220,12 @@
 
 \section{Limitations}
 	\begin{description}
-		\item[Downloading large files]
-		\item[Card information not updated]
+		\item[Downloading large files] Large data can take a long time to download
+			using USART as the content is send byte by byte.
+		\item[Card information not updated] The information is only gathered at the
+			beginning of the program in the microcontroller.
 	\end{description}
+
 \section{Discussion}
 
 %referenslista

@@ -22,11 +22,6 @@
 	\section[Introduction]{Introduction}
 
 	\section[Materials and Methods]{Materials and Methods}
-		\begin{frame}
-			\frametitle{Wiring diagram - Hardware overview}
-			\includegraphics[width=\textwidth]{kopplingsschema.png}
-		\end{frame}
-
 		\subsection[Hardware]{Hardware}
 			\begin{frame}
 				\frametitle{Hardware}
@@ -93,9 +88,24 @@
 
 			\begin{frame}
 				\frametitle{MMC}
+				\begin{columns}
+					\begin{column}[l]{0.49\textwidth}
+						\begin{itemize}
+							\item SPI Interface
+							\item Very cheap
+						\end{itemize}
+					\end{column}
 
+					\begin{column}[r]{0.49\textwidth}
+						\centering
+							\includegraphics[height=0.3\textheight]{mmc.jpg}
+					\end{column}
+				\end{columns}
+			\end{frame}
 
-				\includegraphics[height=0.3\textheight]{mmc.jpg}
+			\begin{frame}
+				\frametitle{Wiring diagram - Hardware overview}
+				\includegraphics[width=\textwidth]{kopplingsschema.png}
 			\end{frame}
 
 		\subsection[Software]{Software}
@@ -104,13 +114,31 @@
 					\item Procyon
 					\item Data download
 					\item Sensor interaction - LM74
-					\item "UI" - USART
+					\item ''UI'' - USART
 					\item Interrupts - Timer and USART receive
 				\end{itemize}
 			\end{frame}
 
 			\begin{frame}
 				\frametitle{Procyon}
+				\begin{columns}
+					\begin{column}[l]{0.49\textwidth}
+						Not the raccon (Procyon Lotor)
+					\end{column}
+
+					\begin{column}[r]{0.49\textwidth}
+						\centering
+							\includegraphics[height=0.3\textheight]{procyon.jpg}
+					\end{column}
+				\end{columns}
+			\end{frame}
+
+			\begin{frame}
+				\frametitle{Procyon}
+				\begin{itemize}
+					\item Support library for AVR Processors
+					\item Implements most of the specified functionality
+				\end{itemize}
 			\end{frame}
 
 	\section[Results]{Results}

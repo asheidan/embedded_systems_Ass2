@@ -105,12 +105,35 @@
 					\item Data download
 					\item Sensor interaction - LM74
 					\item "UI" - USART
-					\item Interrupts - Timer and USART receive
 				\end{itemize}
 			\end{frame}
 
 			\begin{frame}
 				\frametitle{Procyon}
+			\end{frame}
+
+			\begin{frame}
+				\frametitle{Data download}
+			\end{frame}
+
+			\begin{frame}
+				\frametitle{Sensor interaction - LM74}
+				\begin{itemize}
+					\item Timer interrupt each second.
+					\item Sensors are read and values formatted in a readable way.
+					\item Stored on MMC.
+				\end{itemize}
+			\end{frame}
+
+			\begin{frame}
+				\frametitle{"UI" - USART}
+				\begin{description}
+					\item[{\tt i}] Displays information about the system, such as version number of the software, current end sector, total amount of sectors and the size of a sector on the card.
+					\item[{\tt d}] Downloads all saved data.
+					\item[{\tt r}] Formats the card.
+					\item[{\tt m}] Reinitializes a card, used when changing cards.
+					\item[{\tt h}] Displays a help text describing all commands. Also sent when an unrecognized character is received.
+				\end{description}
 			\end{frame}
 
 	\section[Results]{Results}

@@ -156,6 +156,11 @@
 
 			\begin{frame}
 				\frametitle{Data download}
+				\begin{itemize}
+					\item Downloaded through USART, LAN dropped.
+					\item MMC format has a config sector and data sectors.
+					\item ''2010-05-30 13:45:05{\textbackslash}t24.25{\textbackslash}n2010-05-30 13:45:06{\textbackslash}t24.5{\textbackslash}n...''
+				\end{itemize}
 			\end{frame}
 
 			\begin{frame}

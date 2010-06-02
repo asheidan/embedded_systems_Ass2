@@ -6,7 +6,7 @@
 \usepackage{beamerthemesplit}
 \usepackage{hyperref}
 
-\title{Customer Terminal}
+\title{Data Acquisition Unit}
 \author{
 	Emil Eriksson \\
 	Rickard Westerlund
@@ -34,28 +34,68 @@
 					\item Microcontroller
 					\item Sensor - LM74
 					\item Network - ENC28J60
+					\item MMC
 				\end{itemize}
 			\end{frame}
 
 			\begin{frame}
 				\frametitle{Microcontroller}
-				ATMega644PA
+				\begin{columns}
+					\begin{column}[l]{0.49\textwidth}
+						ATMega644PA
+						\begin{itemize}
+							\item Large RAM - 4kB
+						\end{itemize}
+					\end{column}
 
-				picture!!!
+					\begin{column}[r]{0.49\textwidth}
+						\centering
+							\includegraphics[height=0.3\textheight]{mega644.jpg}
+					\end{column}
+				\end{columns}
 			\end{frame}
 
 			\begin{frame}
 				\frametitle{Sensor}
-				LM74
+				\begin{columns}
+					\begin{column}[l]{0.49\textwidth}
+						LM74
+						\begin{itemize}
+							\item Temperature sensor
+							\item SPI Interface
+						\end{itemize}
+					\end{column}
 
-				picture!!!
+					\begin{column}[r]{0.49\textwidth}
+						\centering
+							\includegraphics[height=0.3\textheight]{LM74CIM.jpg}
+					\end{column}
+				\end{columns}
 			\end{frame}
 
 			\begin{frame}
 				\frametitle{Network}
-				ENC28J60
+				\begin{columns}
+					\begin{column}[l]{0.49\textwidth}
+						ENC28J60
+						\begin{itemize}
+							\item Stand-alone Controller
+							\item SPI Interface
+						\end{itemize}
+					\end{column}
 
-				picture!!!
+					\begin{column}[r]{0.49\textwidth}
+						\centering
+							\includegraphics[height=0.3\textheight]{enc28j60.jpg}
+					\end{column}
+				\end{columns}
+			\end{frame}
+
+			\begin{frame}
+				\frametitle{MMC}
+
+
+				\includegraphics[height=0.3\textheight]{mmc.jpg}
 			\end{frame}
 
 		\subsection[Software]{Software}

@@ -20,6 +20,14 @@
 	\frame{\tableofcontents}
 
 	\section[Introduction]{Introduction}
+		\begin{frame}
+			\frametitle{Goal}
+			\begin{itemize}
+				\item A self-contained unit
+				\item Data collection capabilities
+				\item Remote data download
+			\end{itemize}
+		\end{frame}
 
 	\section[Materials and Methods]{Materials and Methods}
 		\subsection[Hardware]{Hardware}
@@ -27,8 +35,8 @@
 				\frametitle{Hardware}
 				\begin{itemize}
 					\item Microcontroller
-					\item Sensor - LM74
-					\item Network - ENC28J60
+					\item Sensor(s)
+					\item Network
 					\item MMC
 				\end{itemize}
 			\end{frame}
@@ -138,6 +146,12 @@
 				\begin{itemize}
 					\item Support library for AVR Processors
 					\item Implements most of the specified functionality
+						\pause
+						\begin{itemize}
+							\item SPI
+							\item MMC
+							\item USART
+						\end{itemize}
 				\end{itemize}
 			\end{frame}
 
